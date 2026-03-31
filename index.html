@@ -43,30 +43,38 @@ button {
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-  const SECRET = "Bli17cc26";
 
-  // 🔐 TU PASSWORD
-  const PASSWORD = "172635"; // 👈 cámbiala si quieres
-
-  let autorizado = false;
+  let passwordIngresada = "";
 
   function pedirPassword() {
-  autorizado = true;
-  cargarModo();
-}
+    const pass = prompt("🔐 Ingresa la clave:");
 
-  async function setModo(modo) {
-    if (!autorizado) {
-      alert("🔒 No autorizado");
+    if (!pass) {
+      alert("❌ Cancelado");
       return;
     }
 
-    await setDoc(doc(db, "config", "restricciones"), {
-  modo: modo,
-  secret: SECRET
-}, { merge: true });
-
+    passwordIngresada = pass.trim();
     cargarModo();
+  }
+
+  async function setModo(modo) {
+    if (!passwordIngresada) {
+      alert("🔒 Ingresa la clave primero");
+      return;
+    }
+
+    try {
+      await setDoc(doc(db, "config", "restricciones"), {
+        modo: modo,
+        password: passwordIngresada
+      }, { merge: true });
+
+      cargarModo();
+
+    } catch (e) {
+      alert("❌ Clave incorrecta");
+    }
   }
 
   async function cargarModo() {
@@ -79,12 +87,10 @@ button {
 
   window.setModo = setModo;
 
-  // 🔐 pide contraseña al abrir
+  // pide clave al iniciar
   pedirPassword();
 
-  setInterval(() => {
-    if (autorizado) cargarModo();
-  }, 3000);
+  setInterval(cargarModo, 3000);
 </script>
 
 </body>
