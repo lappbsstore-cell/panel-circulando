@@ -51,15 +51,9 @@ button {
   let autorizado = false;
 
   function pedirPassword() {
-    const pass = prompt("🔐 Ingresa la clave:");
-
-    if (pass && pass.trim() === PASSWORD) {
-      autorizado = true;
-      cargarModo();
-    } else {
-      alert("❌ Clave incorrecta");
-    }
-  }
+  autorizado = true;
+  cargarModo();
+}
 
   async function setModo(modo) {
     if (!autorizado) {
