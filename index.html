@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body { font-family: Arial; padding: 30px; }
+button {
+  width: 100%;
+  padding: 20px;
+  font-size: 24px;
+  margin-top: 15px;
+  border-radius: 10px;
+  border: none;
+}
+.auto { background: #4CAF50; color: white; }
+.normal { background: #2196F3; color: white; }
+.fase1 { background: #FF9800; color: white; }
+.fase2 { background: #f44336; color: white; }
+</style>
+</head>
+
+<body>
+
+<h2 id="estado">Cargando...</h2>
+
+<button class="auto" onclick="setModo('auto')">AUTO</button>
+<button class="normal" onclick="setModo('normal')">NORMAL</button>
+<button class="fase1" onclick="setModo('fase1')">FASE 1</button>
+<button class="fase2" onclick="setModo('fase2')">FASE 2</button>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "TU_API_KEY",
+  authDomain: "TU_PROJECT.firebaseapp.com",
+  projectId: "TU_PROJECT_ID"
+};
+
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+async function setModo(modo) {
+  await db.collection("config").doc("restricciones").set({
+    modo: modo
+  }, { merge: true });
+
+  cargarModo();
+}
+
+async function cargarModo() {
+  const doc = await db.collection("config").doc("restricciones").get();
+
+  const modo = doc.exists ? doc.data().modo : "auto";
+
+  document.getElementById("estado").innerText = "Modo actual: " + modo;
+}
+
+setInterval(cargarModo, 3000);
+cargarModo();
+</script>
+
+</body>
+</html>
