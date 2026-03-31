@@ -27,6 +27,15 @@ button {
 <button class="normal" onclick="setModo('normal')">NORMAL</button>
 <button class="fase1" onclick="setModo('fase1')">FASE 1</button>
 <button class="fase2" onclick="setModo('fase2')">FASE 2</button>
+  <h3>Control Sábado</h3>
+
+<button onclick="setSabado('1','pares')">H1 PARES</button>
+<button onclick="setSabado('1','nones')">H1 NONES</button>
+<button onclick="setSabado('1','todos')">H1 TODOS</button>
+
+<button onclick="setSabado('00','pares')">H00 PARES</button>
+<button onclick="setSabado('00','nones')">H00 NONES</button>
+<button onclick="setSabado('00','todos')">H00 TODOS</button>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
