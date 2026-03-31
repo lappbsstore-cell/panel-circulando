@@ -43,6 +43,7 @@ button {
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  const SECRET = "mi_clave_ultra_segura_789";
 
   // 🔐 TU PASSWORD
   const PASSWORD = "172635"; // 👈 cámbiala si quieres
@@ -67,8 +68,9 @@ button {
     }
 
     await setDoc(doc(db, "config", "restricciones"), {
-      modo: modo
-    }, { merge: true });
+  modo: modo,
+  secret: SECRET
+}, { merge: true });
 
     cargarModo();
   }
