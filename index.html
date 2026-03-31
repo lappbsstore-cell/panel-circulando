@@ -44,7 +44,28 @@ button {
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
+  // 🔐 TU PASSWORD
+  const PASSWORD = "172635"; // 👈 cámbiala si quieres
+
+  let autorizado = false;
+
+  function pedirPassword() {
+    const pass = prompt("🔐 Ingresa la clave:");
+
+    if (pass === PASSWORD) {
+      autorizado = true;
+      cargarModo();
+    } else {
+      alert("❌ Clave incorrecta");
+    }
+  }
+
   async function setModo(modo) {
+    if (!autorizado) {
+      alert("🔒 No autorizado");
+      return;
+    }
+
     await setDoc(doc(db, "config", "restricciones"), {
       modo: modo
     }, { merge: true });
@@ -60,11 +81,14 @@ button {
     document.getElementById("estado").innerText = "Modo actual: " + modo;
   }
 
-  // 👇 hace que los botones funcionen
   window.setModo = setModo;
 
-  setInterval(cargarModo, 3000);
-  cargarModo();
+  // 🔐 pide contraseña al abrir
+  pedirPassword();
+
+  setInterval(() => {
+    if (autorizado) cargarModo();
+  }, 3000);
 </script>
 
 </body>
