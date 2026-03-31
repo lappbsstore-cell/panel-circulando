@@ -22,6 +22,7 @@ button {
 <body>
 
 <h2 id="estado">Cargando...</h2>
+<h3 id="estadoReglas">Sin cambios</h3>
 
 <button class="auto" onclick="setModo('auto')">AUTO</button>
 <button class="normal" onclick="setModo('normal')">NORMAL</button>
@@ -100,34 +101,34 @@ button {
   }
 
   async function setHoy(tipo) {
-    await setDoc(doc(db, "config", "restricciones"), {
-      restricciones: {
-        hoy: { tipo: tipo }
-      }
-    }, { merge: true });
+  await setDoc(doc(db, "config", "restricciones"), {
+    restricciones: {
+      hoy: { tipo: tipo }
+    }
+  }, { merge: true });
 
-    alert("Hoy: " + tipo);
-  }
+  document.getElementById("estadoReglas").innerText = "Hoy: " + tipo;
+}
 
   async function setManana(tipo) {
-    await setDoc(doc(db, "config", "restricciones"), {
-      restricciones: {
-        manana: { tipo: tipo }
-      }
-    }, { merge: true });
+  await setDoc(doc(db, "config", "restricciones"), {
+    restricciones: {
+      manana: { tipo: tipo }
+    }
+  }, { merge: true });
 
-    alert("Mañana: " + tipo);
-  }
+  document.getElementById("estadoReglas").innerText = "Mañana: " + tipo;
+}
 
   async function setSabado(holo, tipo) {
-    await setDoc(doc(db, "config", "restricciones"), {
-      sabado: {
-        [holo]: { tipo: tipo }
-      }
-    }, { merge: true });
+  await setDoc(doc(db, "config", "restricciones"), {
+    sabado: {
+      [holo]: { tipo: tipo }
+    }
+  }, { merge: true });
 
-    alert("Sábado " + holo + ": " + tipo);
-  }
+  document.getElementById("estadoReglas").innerText = "Sábado " + holo + ": " + tipo;
+}
 
   async function cargarModo() {
     const docSnap = await getDoc(doc(db, "config", "restricciones"));
