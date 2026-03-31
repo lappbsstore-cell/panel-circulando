@@ -66,9 +66,16 @@ button {
 
     try {
       await setDoc(doc(db, "config", "restricciones"), {
-        modo: modo,
-        password: passwordIngresada
-      }, { merge: true });
+  modo: modo,
+  password: passwordIngresada,
+
+  sabado: {
+    "1": { tipo: "pares" },
+    "00": { tipo: "nones" },
+    "2": { tipo: "todos" }
+  }
+
+}, { merge: true });
 
       cargarModo();
 
