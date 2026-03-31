@@ -27,29 +27,21 @@ button {
 <button class="normal" onclick="setModo('normal')">NORMAL</button>
 <button class="fase1" onclick="setModo('fase1')">FASE 1</button>
 <button class="fase2" onclick="setModo('fase2')">FASE 2</button>
-  <h3>Control Sábado</h3>
-<h3>Entre Semana</h3>
 
-<button onclick="setDia('lunes','pares')">Lunes PARES</button>
-<button onclick="setDia('lunes','nones')">Lunes NONES</button>
-<button onclick="setDia('lunes','todos')">Lunes TODOS</button>
+<h3>Hoy</h3>
 
-<button onclick="setDia('martes','pares')">Martes PARES</button>
-<button onclick="setDia('martes','nones')">Martes NONES</button>
-<button onclick="setDia('martes','todos')">Martes TODOS</button>
+<button onclick="setHoy('pares')">HOY PARES</button>
+<button onclick="setHoy('nones')">HOY NONES</button>
+<button onclick="setHoy('todos')">HOY TODOS</button>
 
-<button onclick="setDia('miercoles','pares')">Miércoles PARES</button>
-<button onclick="setDia('miercoles','nones')">Miércoles NONES</button>
-<button onclick="setDia('miercoles','todos')">Miércoles TODOS</button>
+<h3>Mañana</h3>
 
-<button onclick="setDia('jueves','pares')">Jueves PARES</button>
-<button onclick="setDia('jueves','nones')">Jueves NONES</button>
-<button onclick="setDia('jueves','todos')">Jueves TODOS</button>
+<button onclick="setManana('pares')">MAÑANA PARES</button>
+<button onclick="setManana('nones')">MAÑANA NONES</button>
+<button onclick="setManana('todos')">MAÑANA TODOS</button>
 
-<button onclick="setDia('viernes','pares')">Viernes PARES</button>
-<button onclick="setDia('viernes','nones')">Viernes NONES</button>
-<button onclick="setDia('viernes','todos')">Viernes TODOS</button>
-  
+<h3>Control Sábado</h3>
+
 <button onclick="setSabado('1','pares')">H1 PARES</button>
 <button onclick="setSabado('1','nones')">H1 NONES</button>
 <button onclick="setSabado('1','todos')">H1 TODOS</button>
@@ -96,11 +88,9 @@ button {
 
     try {
       await setDoc(doc(db, "config", "restricciones"), {
-  modo: modo,
-  password: passwordIngresada,
-
- 
-}, { merge: true });
+        modo: modo,
+        password: passwordIngresada
+      }, { merge: true });
 
       cargarModo();
 
@@ -108,20 +98,37 @@ button {
       alert("❌ Clave incorrecta");
     }
   }
-async function setSabado(holo, tipo) {
-  try {
+
+  async function setHoy(tipo) {
+    await setDoc(doc(db, "config", "restricciones"), {
+      restricciones: {
+        hoy: { tipo: tipo }
+      }
+    }, { merge: true });
+
+    alert("Hoy: " + tipo);
+  }
+
+  async function setManana(tipo) {
+    await setDoc(doc(db, "config", "restricciones"), {
+      restricciones: {
+        manana: { tipo: tipo }
+      }
+    }, { merge: true });
+
+    alert("Mañana: " + tipo);
+  }
+
+  async function setSabado(holo, tipo) {
     await setDoc(doc(db, "config", "restricciones"), {
       sabado: {
         [holo]: { tipo: tipo }
       }
     }, { merge: true });
 
-    alert("Regla actualizada: " + holo + " → " + tipo);
-
-  } catch (e) {
-    alert("Error al guardar");
+    alert("Sábado " + holo + ": " + tipo);
   }
-}
+
   async function cargarModo() {
     const docSnap = await getDoc(doc(db, "config", "restricciones"));
 
@@ -132,7 +139,6 @@ async function setSabado(holo, tipo) {
 
   window.setModo = setModo;
 
-  // pide clave al iniciar
   pedirPassword();
 
   setInterval(cargarModo, 3000);
