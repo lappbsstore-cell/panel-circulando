@@ -78,12 +78,7 @@ button {
   modo: modo,
   password: passwordIngresada,
 
-  sabado: {
-    "1": { tipo: "pares" },
-    "00": { tipo: "nones" },
-    "2": { tipo: "todos" }
-  }
-
+ 
 }, { merge: true });
 
       cargarModo();
@@ -92,7 +87,20 @@ button {
       alert("❌ Clave incorrecta");
     }
   }
+async function setSabado(holo, tipo) {
+  try {
+    await setDoc(doc(db, "config", "restricciones"), {
+      sabado: {
+        [holo]: { tipo: tipo }
+      }
+    }, { merge: true });
 
+    alert("Regla actualizada: " + holo + " → " + tipo);
+
+  } catch (e) {
+    alert("Error al guardar");
+  }
+}
   async function cargarModo() {
     const docSnap = await getDoc(doc(db, "config", "restricciones"));
 
