@@ -28,40 +28,43 @@ button {
 <button class="fase1" onclick="setModo('fase1')">FASE 1</button>
 <button class="fase2" onclick="setModo('fase2')">FASE 2</button>
 
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyC8hr-0WUNpz62rfkAVCzpozH5on-kVjuU",
-  authDomain: "circula-bfb35.firebaseapp.com",
-  projectId: "circula-bfb35",
-  storageBucket: "circula-bfb35.firebasestorage.app",
-  messagingSenderId: "742771705055",
-  appId: "1:742771705055:web:027f7b88088ef5f315956a"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyC8hr-0WUNpz62rfkAVCzpozH5on-kVjuU",
+    authDomain: "circula-bfb35.firebaseapp.com",
+    projectId: "circula-bfb35",
+    storageBucket: "circula-bfb35.firebasestorage.app",
+    messagingSenderId: "742771705055",
+    appId: "1:742771705055:web:027f7b88088ef5f315956a"
+  };
 
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-async function setModo(modo) {
-  await db.collection("config").doc("restricciones").set({
-    modo: modo
-  }, { merge: true });
+  async function setModo(modo) {
+    await setDoc(doc(db, "config", "restricciones"), {
+      modo: modo
+    }, { merge: true });
 
+    cargarModo();
+  }
+
+  async function cargarModo() {
+    const docSnap = await getDoc(doc(db, "config", "restricciones"));
+
+    const modo = docSnap.exists() ? docSnap.data().modo : "auto";
+
+    document.getElementById("estado").innerText = "Modo actual: " + modo;
+  }
+
+  // 👇 hace que los botones funcionen
+  window.setModo = setModo;
+
+  setInterval(cargarModo, 3000);
   cargarModo();
-}
-
-async function cargarModo() {
-  const doc = await db.collection("config").doc("restricciones").get();
-
-  const modo = doc.exists ? doc.data().modo : "auto";
-
-  document.getElementById("estado").innerText = "Modo actual: " + modo;
-}
-
-setInterval(cargarModo, 3000);
-cargarModo();
 </script>
 
 </body>
