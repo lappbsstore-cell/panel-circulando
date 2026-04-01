@@ -155,12 +155,12 @@ async function setHoyHolo(holo, tipo) {
 async function resetHoy() {
   await setDoc(doc(db, "config", "restricciones"), {
     restricciones: {
-      hoy: {}
+      hoy: null
     }
   }, { merge: true });
 
   document.getElementById("estadoReglas").innerText =
-    "Hoy reset";
+    "Hoy reset (auto)";
 }
   async function cargarModo() {
     const docSnap = await getDoc(doc(db, "config", "restricciones"));
