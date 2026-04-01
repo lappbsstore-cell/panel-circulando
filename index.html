@@ -247,9 +247,25 @@ function generarResumen(restricciones) {
   }
 
   const hoy = generarTexto(restricciones?.hoy, "Hoy", "#2196F3");
-  const manana = generarTexto(restricciones?.manana, "Mañana", "#9C27B0");
+  let mananaTexto;
 
-  return hoy + manana;
+if (esFase1Manana(restricciones)) {
+  mananaTexto = `<div style="color:#9C27B0">Mañana: Fase 1 (Panel)</div>`;
+} else {
+  mananaTexto = generarTexto(restricciones?.manana, "Mañana", "#9C27B0");
+}
+
+  return hoy + mananaTexto;
+}
+function esFase1Manana(restricciones) {
+  const manana = restricciones?.manana;
+
+  if (!manana) return false;
+
+  return (
+    manana["0"]?.tipo === "todos" &&
+    manana["1"]?.tipo === "pares"
+  );
 }
   
 async function renderBotones() {
