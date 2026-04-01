@@ -62,6 +62,25 @@ button {
 
 <h3>Mañana</h3>
 
+
+<button data-dia="manana" data-holo="00" data-tipo="pares" onclick="setMananaHolo('00','pares')">H00 PARES</button>
+<button data-dia="manana" data-holo="00" data-tipo="nones" onclick="setMananaHolo('00','nones')">H00 NONES</button>
+<button data-dia="manana" data-holo="00" data-tipo="todos" onclick="setMananaHolo('00','todos')">H00 TODOS</button>
+
+<button data-dia="manana" data-holo="0" data-tipo="pares" onclick="setMananaHolo('0','pares')">H0 PARES</button>
+<button data-dia="manana" data-holo="0" data-tipo="nones" onclick="setMananaHolo('0','nones')">H0 NONES</button>
+<button data-dia="manana" data-holo="0" data-tipo="todos" onclick="setMananaHolo('0','todos')">H0 TODOS</button>
+
+<button data-dia="manana" data-holo="1" data-tipo="pares" onclick="setMananaHolo('1','pares')">H1 PARES</button>
+<button data-dia="manana" data-holo="1" data-tipo="nones" onclick="setMananaHolo('1','nones')">H1 NONES</button>
+<button data-dia="manana" data-holo="1" data-tipo="todos" onclick="setMananaHolo('1','todos')">H1 TODOS</button>
+
+<button data-dia="manana" data-holo="2" data-tipo="todos" onclick="setMananaHolo('2','todos')">H2 TODOS</button>
+
+
+
+<button onclick="resetManana()">🔄 RESET MAÑANA</button>
+
 <h3>Configurar Fase 1</h3>
 
 <button onclick="setFase1('00','pares')">H00 PARES</button>
@@ -82,23 +101,6 @@ button {
   💾 Guardar Fase 1
 </button>
   
-<button data-dia="manana" data-holo="00" data-tipo="pares" onclick="setMananaHolo('00','pares')">H00 PARES</button>
-<button data-dia="manana" data-holo="00" data-tipo="nones" onclick="setMananaHolo('00','nones')">H00 NONES</button>
-<button data-dia="manana" data-holo="00" data-tipo="todos" onclick="setMananaHolo('00','todos')">H00 TODOS</button>
-
-<button data-dia="manana" data-holo="0" data-tipo="pares" onclick="setMananaHolo('0','pares')">H0 PARES</button>
-<button data-dia="manana" data-holo="0" data-tipo="nones" onclick="setMananaHolo('0','nones')">H0 NONES</button>
-<button data-dia="manana" data-holo="0" data-tipo="todos" onclick="setMananaHolo('0','todos')">H0 TODOS</button>
-
-<button data-dia="manana" data-holo="1" data-tipo="pares" onclick="setMananaHolo('1','pares')">H1 PARES</button>
-<button data-dia="manana" data-holo="1" data-tipo="nones" onclick="setMananaHolo('1','nones')">H1 NONES</button>
-<button data-dia="manana" data-holo="1" data-tipo="todos" onclick="setMananaHolo('1','todos')">H1 TODOS</button>
-
-<button data-dia="manana" data-holo="2" data-tipo="todos" onclick="setMananaHolo('2','todos')">H2 TODOS</button>
-
-
-
-<button onclick="resetManana()">🔄 RESET MAÑANA</button>
 <button onclick="anunciarFase1Manana()" style="background:#FF9800;color:white;">
   📢 Anunciar Fase 1 mañana
 </button>
