@@ -221,6 +221,7 @@ async function cargarModo() {
   document.getElementById("estado").innerText = "Modo actual: " + (data.modo || "auto");
 
   renderBotones();
+  renderHistorial(); // 🔥 ESTA LÍNEA LA AGREGAS
 }
 
 async function renderBotones() {
@@ -251,6 +252,29 @@ document.querySelectorAll("button[data-modo]").forEach(btn => {
 });
 }
 
+async function renderHistorial() {
+  const snap = await getDoc(doc(db, "config", "restricciones"));
+
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+  const historial = data.historial || [];
+
+  const div = document.getElementById("historial");
+
+  if (!historial.length) {
+    div.innerHTML = "Sin movimientos aún";
+    return;
+  }
+
+  div.innerHTML = historial.map(h => `
+    <div style="margin-bottom:6px;">
+      🕒 ${h.fecha} — ${h.tipo} ${h.holograma || ""} ${h.valor}
+    </div>
+  `).join("");
+}
+
+  
 window.setModo = setModo;
 window.setHoyHolo = setHoyHolo;
 window.setMananaHolo = setMananaHolo;
@@ -258,6 +282,11 @@ window.resetHoy = resetHoy;
 window.resetManana = resetManana;
 
 pedirPassword();
+
+setTimeout(() => {
+  renderHistorial();
+}, 1000);
+
 setInterval(cargarModo, 3000);
 </script>
 
