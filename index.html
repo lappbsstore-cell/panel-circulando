@@ -58,6 +58,9 @@ button {
 <button data-dia="hoy" data-holo="2" data-tipo="todos" onclick="setHoyHolo('2','todos')">H2 TODOS</button>
 
 <button onclick="resetHoy()">🔄 RESET HOY</button>
+<button onclick="guardarFase1Config()" style="background:#FF9800;color:white;">
+  💾 Guardar como Fase 1
+</button>
 
 <h3>Mañana</h3>
 
@@ -333,7 +336,25 @@ async function renderHistorial() {
     `;
   }).join("");
 }
+async function guardarFase1Config() {
+  const ref = doc(db, "config", "restricciones");
+  const snap = await getDoc(ref);
 
+  let data = snap.exists() ? snap.data() : {};
+  let restricciones = data.restricciones || {};
+  let hoy = restricciones.hoy || {};
+
+  await setDoc(ref, {
+    fase1Config: hoy
+  }, { merge: true });
+
+  await guardarHistorial({
+    tipo: "config",
+    valor: "fase1 guardada"
+  });
+
+  alert("Fase 1 guardada correctamente");
+}
   async function limpiarHistorial() {
   const confirmar = confirm("¿Seguro que quieres borrar el historial?");
 
@@ -360,10 +381,12 @@ async function anunciarFase1Manana() {
   let restricciones = data.restricciones || {};
 
   // 🔥 CONFIGURACIÓN FASE 1 (puedes ajustarla)
-  const manana = {
-    "0": { tipo: "todos" },
-    "1": { tipo: "pares" }
-  };
+  const manana = data.fase1Config || {};
+
+if (Object.keys(manana).length === 0) {
+  alert("Primero guarda una configuración de Fase 1");
+  return;
+}
 
   await setDoc(ref, {
     restricciones: {
@@ -408,6 +431,7 @@ window.resetManana = resetManana;
 window.limpiarHistorial = limpiarHistorial;
 window.anunciarFase1Manana = anunciarFase1Manana;
 window.cancelarManana = cancelarManana;
+window.guardarFase1Config = guardarFase1Config;
 
 pedirPassword();
 
