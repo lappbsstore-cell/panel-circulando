@@ -35,10 +35,10 @@ button {
 <h2 id="estado">Cargando...</h2>
 <h3 id="estadoReglas">Sin cambios</h3>
 
-<button class="auto" onclick="setModo('auto')">AUTO</button>
-<button class="normal" onclick="setModo('normal')">NORMAL</button>
-<button class="fase1" onclick="setModo('fase1')">FASE 1</button>
-<button class="fase2" onclick="setModo('fase2')">FASE 2</button>
+<button class="auto" data-modo="auto" onclick="setModo('auto')">AUTO</button>
+<button class="normal" data-modo="normal" onclick="setModo('normal')">NORMAL</button>
+<button class="fase1" data-modo="fase1" onclick="setModo('fase1')">FASE 1</button>
+<button class="fase2" data-modo="fase2" onclick="setModo('fase2')">FASE 2</button>
 
 <h3>Hoy</h3>
 
@@ -192,6 +192,16 @@ async function renderBotones() {
 
     btn.classList.toggle("activo", activo);
   });
+  // 🔥 pintar modo activo
+const modoActual = data.modo || "auto";
+
+document.querySelectorAll("button[data-modo]").forEach(btn => {
+  if (btn.dataset.modo === modoActual) {
+    btn.classList.add("activo");
+  } else {
+    btn.classList.remove("activo");
+  }
+});
 }
 
 window.setModo = setModo;
