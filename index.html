@@ -223,18 +223,23 @@ async function cargarModo() {
   
 }
 
-function generarResumenHoy(restricciones) {
-  const hoy = restricciones?.hoy;
+function generarResumen(restricciones) {
+  function generarTexto(diaData, label) {
+    if (!diaData || Object.keys(diaData).length === 0) {
+      return `${label}: automático`;
+    }
 
-  if (!hoy || Object.keys(hoy).length === 0) {
-    return "Hoy: automático";
+    const partes = Object.entries(diaData).map(([holo, val]) => {
+      return `H${holo} ${val.tipo}`;
+    });
+
+    return `${label}: ` + partes.join(", ");
   }
 
-  const partes = Object.entries(hoy).map(([holo, val]) => {
-    return `H${holo} ${val.tipo}`;
-  });
+  const hoy = generarTexto(restricciones?.hoy, "Hoy");
+  const manana = generarTexto(restricciones?.manana, "Mañana");
 
-  return "Hoy: " + partes.join(", ");
+  return hoy + "\n" + manana;
 }
   
 async function renderBotones() {
@@ -265,7 +270,7 @@ async function renderBotones() {
   });
 
   // 🔥 resumen (UNA SOLA VEZ)
-  const resumen = generarResumenHoy(restricciones);
+  const resumen = generarResumen(restricciones);
   document.getElementById("resumenHoy").innerText = resumen;
 }
 
