@@ -76,6 +76,9 @@ button {
 
 <button onclick="resetManana()">🔄 RESET MAÑANA</button>
 
+<h3>Historial</h3>
+<div id="historial" style="font-size:14px;"></div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -103,10 +106,34 @@ async function setModo(modo) {
     modo: modo,
     password: passwordIngresada
   }, { merge: true });
+await guardarHistorial({
+  tipo: "modo",
+  valor: modo
+});
 
+  await guardarHistorial({
+  tipo: "modo",
+  valor: modo
+});
+  
   cargarModo();
 }
+async function guardarHistorial(accion) {
+  const ref = doc(db, "config", "restricciones");
+  const snap = await getDoc(ref);
 
+  let data = snap.exists() ? snap.data() : {};
+  let historial = data.historial || [];
+
+  historial.unshift({
+    ...accion,
+    fecha: new Date().toLocaleString()
+  });
+
+  historial = historial.slice(0, 50);
+
+  await setDoc(ref, { historial }, { merge: true });
+}
 async function setHoyHolo(holo, tipo) {
   const ref = doc(db, "config", "restricciones");
   const snap = await getDoc(ref);
@@ -124,7 +151,12 @@ async function setHoyHolo(holo, tipo) {
   await setDoc(ref, {
     restricciones: { ...restricciones, hoy }
   }, { merge: true });
-
+ // 🔥 👇 AQUÍ VA ESTO
+  await guardarHistorial({
+    tipo: "hoy",
+    holograma: holo,
+    valor: tipo
+  });
   renderBotones();
 }
 
@@ -146,6 +178,11 @@ async function setMananaHolo(holo, tipo) {
     restricciones: { ...restricciones, manana }
   }, { merge: true });
 
+  await guardarHistorial({
+  tipo: "mañana",
+  holograma: holo,
+  valor: tipo
+});
   renderBotones();
 }
 
@@ -154,6 +191,11 @@ async function resetHoy() {
     restricciones: { hoy: null }
   }, { merge: true });
 
+await guardarHistorial({
+  tipo: "reset",
+  valor: "hoy"
+});
+  
   renderBotones();
 }
 
@@ -162,6 +204,11 @@ async function resetManana() {
     restricciones: { manana: null }
   }, { merge: true });
 
+await guardarHistorial({
+  tipo: "reset",
+  valor: "mañana"
+});
+  
   renderBotones();
 }
 
