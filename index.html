@@ -271,7 +271,7 @@ async function renderBotones() {
 
   // 🔥 resumen (UNA SOLA VEZ)
   const resumen = generarResumen(restricciones);
-  document.getElementById("resumenHoy").innerText = resumen;
+  document.getElementById("resumenHoy").innerHTML = resumen;
 }
 
 async function renderHistorial() {
