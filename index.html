@@ -76,6 +76,13 @@ button {
 <button data-dia="manana" data-holo="2" data-tipo="todos" onclick="setMananaHolo('2','todos')">H2 TODOS</button>
 
 <button onclick="resetManana()">🔄 RESET MAÑANA</button>
+<button onclick="anunciarFase1Manana()" style="background:#FF9800;color:white;">
+  📢 Anunciar Fase 1 mañana
+</button>
+
+<button onclick="cancelarManana()" style="background:#4CAF50;color:white;">
+  ❌ Cancelar contingencia mañana
+</button>
 
 <h3>Historial</h3>
 <button onclick="limpiarHistorial()" style="background:#555;color:white;">
@@ -324,6 +331,58 @@ async function renderHistorial() {
 
   renderHistorial();
 }
+
+async function anunciarFase1Manana() {
+  const confirmar = confirm("¿Anunciar Fase 1 para mañana?");
+
+  if (!confirmar) return;
+
+  const ref = doc(db, "config", "restricciones");
+  const snap = await getDoc(ref);
+
+  let data = snap.exists() ? snap.data() : {};
+  let restricciones = data.restricciones || {};
+
+  // 🔥 CONFIGURACIÓN FASE 1 (puedes ajustarla)
+  const manana = {
+    "0": { tipo: "todos" },
+    "1": { tipo: "pares" }
+  };
+
+  await setDoc(ref, {
+    restricciones: {
+      ...restricciones,
+      manana: manana
+    }
+  }, { merge: true });
+
+  await guardarHistorial({
+    tipo: "mañana",
+    valor: "fase1"
+  });
+
+  renderBotones();
+}
+
+async function cancelarManana() {
+  const confirmar = confirm("¿Cancelar contingencia de mañana?");
+  if (!confirmar) return;
+
+  const ref = doc(db, "config", "restricciones");
+
+  await setDoc(ref, {
+    restricciones: {
+      manana: null
+    }
+  }, { merge: true });
+
+  await guardarHistorial({
+    tipo: "mañana",
+    valor: "cancelado"
+  });
+
+  renderBotones();
+}
   
 window.setModo = setModo;
 window.setHoyHolo = setHoyHolo;
@@ -331,6 +390,8 @@ window.setMananaHolo = setMananaHolo;
 window.resetHoy = resetHoy;
 window.resetManana = resetManana;
 window.limpiarHistorial = limpiarHistorial;
+window.anunciarFase1Manana = anunciarFase1Manana;
+window.cancelarManana = cancelarManana;
 
 pedirPassword();
 
