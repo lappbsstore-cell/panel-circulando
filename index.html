@@ -2,20 +2,31 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
 body { font-family: Arial; padding: 30px; }
+
 button {
   width: 100%;
   padding: 20px;
-  font-size: 24px;
-  margin-top: 15px;
+  font-size: 20px;
+  margin-top: 10px;
   border-radius: 10px;
   border: none;
+  transition: 0.2s;
 }
+
 .auto { background: #4CAF50; color: white; }
 .normal { background: #2196F3; color: white; }
 .fase1 { background: #FF9800; color: white; }
 .fase2 { background: #f44336; color: white; }
+
+.activo {
+  background: #2ecc71 !important;
+  color: white;
+  font-weight: bold;
+  transform: scale(0.97);
+}
 </style>
 </head>
 
@@ -29,207 +40,168 @@ button {
 <button class="fase1" onclick="setModo('fase1')">FASE 1</button>
 <button class="fase2" onclick="setModo('fase2')">FASE 2</button>
 
-<h3>Hoy (por holograma)</h3>
+<h3>Hoy</h3>
 
-<button onclick="setHoyHolo('00','pares')">H00 PARES</button>
-<button onclick="setHoyHolo('00','nones')">H00 NONES</button>
-<button onclick="setHoyHolo('00','todos')">H00 TODOS</button>
+<button data-dia="hoy" data-holo="00" data-tipo="pares" onclick="setHoyHolo('00','pares')">H00 PARES</button>
+<button data-dia="hoy" data-holo="00" data-tipo="nones" onclick="setHoyHolo('00','nones')">H00 NONES</button>
+<button data-dia="hoy" data-holo="00" data-tipo="todos" onclick="setHoyHolo('00','todos')">H00 TODOS</button>
 
-<button onclick="setHoyHolo('0','pares')">H0 PARES</button>
-<button onclick="setHoyHolo('0','nones')">H0 NONES</button>
-<button onclick="setHoyHolo('0','todos')">H0 TODOS</button>
-  
-<button onclick="setHoyHolo('1','pares')">H1 PARES</button>
-<button onclick="setHoyHolo('1','nones')">H1 NONES</button>
-<button onclick="setHoyHolo('1','todos')">H1 TODOS</button>
+<button data-dia="hoy" data-holo="0" data-tipo="pares" onclick="setHoyHolo('0','pares')">H0 PARES</button>
+<button data-dia="hoy" data-holo="0" data-tipo="nones" onclick="setHoyHolo('0','nones')">H0 NONES</button>
+<button data-dia="hoy" data-holo="0" data-tipo="todos" onclick="setHoyHolo('0','todos')">H0 TODOS</button>
 
-<button onclick="setHoyHolo('2','todos')">H2 TODOS</button>
+<button data-dia="hoy" data-holo="1" data-tipo="pares" onclick="setHoyHolo('1','pares')">H1 PARES</button>
+<button data-dia="hoy" data-holo="1" data-tipo="nones" onclick="setHoyHolo('1','nones')">H1 NONES</button>
+<button data-dia="hoy" data-holo="1" data-tipo="todos" onclick="setHoyHolo('1','todos')">H1 TODOS</button>
 
-<br><br>
+<button data-dia="hoy" data-holo="2" data-tipo="todos" onclick="setHoyHolo('2','todos')">H2 TODOS</button>
 
 <button onclick="resetHoy()">🔄 RESET HOY</button>
 
-<h3>Mañana (por holograma)</h3>
+<h3>Mañana</h3>
 
-<button onclick="setMananaHolo('00','pares')">H00 PARES</button>
-<button onclick="setMananaHolo('00','nones')">H00 NONES</button>
-<button onclick="setMananaHolo('00','todos')">H00 TODOS</button>
+<button data-dia="manana" data-holo="00" data-tipo="pares" onclick="setMananaHolo('00','pares')">H00 PARES</button>
+<button data-dia="manana" data-holo="00" data-tipo="nones" onclick="setMananaHolo('00','nones')">H00 NONES</button>
+<button data-dia="manana" data-holo="00" data-tipo="todos" onclick="setMananaHolo('00','todos')">H00 TODOS</button>
 
-<button onclick="setMananaHolo('0','pares')">H0 PARES</button>
-<button onclick="setMananaHolo('0','nones')">H0 NONES</button>
-<button onclick="setMananaHolo('0','todos')">H0 TODOS</button>
-  
-<button onclick="setMananaHolo('1','pares')">H1 PARES</button>
-<button onclick="setMananaHolo('1','nones')">H1 NONES</button>
-<button onclick="setMananaHolo('1','todos')">H1 TODOS</button>
+<button data-dia="manana" data-holo="0" data-tipo="pares" onclick="setMananaHolo('0','pares')">H0 PARES</button>
+<button data-dia="manana" data-holo="0" data-tipo="nones" onclick="setMananaHolo('0','nones')">H0 NONES</button>
+<button data-dia="manana" data-holo="0" data-tipo="todos" onclick="setMananaHolo('0','todos')">H0 TODOS</button>
 
-<button onclick="setMananaHolo('2','todos')">H2 TODOS</button>
+<button data-dia="manana" data-holo="1" data-tipo="pares" onclick="setMananaHolo('1','pares')">H1 PARES</button>
+<button data-dia="manana" data-holo="1" data-tipo="nones" onclick="setMananaHolo('1','nones')">H1 NONES</button>
+<button data-dia="manana" data-holo="1" data-tipo="todos" onclick="setMananaHolo('1','todos')">H1 TODOS</button>
 
-<br><br>
+<button data-dia="manana" data-holo="2" data-tipo="todos" onclick="setMananaHolo('2','todos')">H2 TODOS</button>
 
 <button onclick="resetManana()">🔄 RESET MAÑANA</button>
 
-<h3>Control Sábado</h3>
-
-<button onclick="setSabado('00','pares')">H00 PARES</button>
-<button onclick="setSabado('00','nones')">H00 NONES</button>
-<button onclick="setSabado('00','todos')">H00 TODOS</button>
-  
-<button onclick="setSabado('0','pares')">H0 PARES</button>
-<button onclick="setSabado('0','nones')">H0 NONES</button>
-<button onclick="setSabado('0','todos')">H0 TODOS</button>
-  
-<button onclick="setSabado('1','pares')">H1 PARES</button>
-<button onclick="setSabado('1','nones')">H1 NONES</button>
-<button onclick="setSabado('1','todos')">H1 TODOS</button>
-
-
-
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyC8hr-0WUNpz62rfkAVCzpozH5on-kVjuU",
-    authDomain: "circula-bfb35.firebaseapp.com",
-    projectId: "circula-bfb35",
-    storageBucket: "circula-bfb35.firebasestorage.app",
-    messagingSenderId: "742771705055",
-    appId: "1:742771705055:web:027f7b88088ef5f315956a"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "circula-bfb35.firebaseapp.com",
+  projectId: "circula-bfb35",
+};
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-  let passwordIngresada = "";
+let passwordIngresada = "";
 
-  function pedirPassword() {
-    const pass = prompt("🔐 Ingresa la clave:");
-
-    if (!pass) {
-      alert("❌ Cancelado");
-      return;
-    }
-
-    passwordIngresada = pass.trim();
-    cargarModo();
-  }
-
-  async function setModo(modo) {
-    if (!passwordIngresada) {
-      alert("🔒 Ingresa la clave primero");
-      return;
-    }
-
-    try {
-      await setDoc(doc(db, "config", "restricciones"), {
-        modo: modo,
-        password: passwordIngresada
-      }, { merge: true });
-
-      cargarModo();
-
-    } catch (e) {
-      alert("❌ Clave incorrecta");
-    }
-  }
-
-  async function setHoy(tipo) {
-  await setDoc(doc(db, "config", "restricciones"), {
-    restricciones: {
-      hoy: { tipo: tipo }
-    }
-  }, { merge: true });
-
-  document.getElementById("estadoReglas").innerText = "Hoy: " + tipo;
+function pedirPassword() {
+  const pass = prompt("🔐 Ingresa la clave:");
+  if (!pass) return;
+  passwordIngresada = pass.trim();
+  cargarModo();
 }
 
-  async function setManana(tipo) {
+async function setModo(modo) {
   await setDoc(doc(db, "config", "restricciones"), {
-    restricciones: {
-      manana: { tipo: tipo }
-    }
+    modo: modo,
+    password: passwordIngresada
   }, { merge: true });
 
-  document.getElementById("estadoReglas").innerText = "Mañana: " + tipo;
+  cargarModo();
 }
 
-  async function setSabado(holo, tipo) {
-  await setDoc(doc(db, "config", "restricciones"), {
-    sabado: {
-      [holo]: { tipo: tipo }
-    }
-  }, { merge: true });
-
-  document.getElementById("estadoReglas").innerText = "Sábado " + holo + ": " + tipo;
-}
 async function setHoyHolo(holo, tipo) {
-  await setDoc(doc(db, "config", "restricciones"), {
-    restricciones: {
-      hoy: {
-        [holo]: { tipo: tipo }
-      }
-    }
+  const ref = doc(db, "config", "restricciones");
+  const snap = await getDoc(ref);
+
+  let data = snap.exists() ? snap.data() : {};
+  let restricciones = data.restricciones || {};
+  let hoy = restricciones.hoy || {};
+
+  if (hoy[holo] && hoy[holo].tipo === tipo) {
+    delete hoy[holo];
+  } else {
+    hoy[holo] = { tipo };
+  }
+
+  await setDoc(ref, {
+    restricciones: { ...restricciones, hoy }
   }, { merge: true });
 
-  document.getElementById("estadoReglas").innerText =
-    "Hoy " + holo + ": " + tipo;
+  renderBotones();
+}
+
+async function setMananaHolo(holo, tipo) {
+  const ref = doc(db, "config", "restricciones");
+  const snap = await getDoc(ref);
+
+  let data = snap.exists() ? snap.data() : {};
+  let restricciones = data.restricciones || {};
+  let manana = restricciones.manana || {};
+
+  if (manana[holo] && manana[holo].tipo === tipo) {
+    delete manana[holo];
+  } else {
+    manana[holo] = { tipo };
+  }
+
+  await setDoc(ref, {
+    restricciones: { ...restricciones, manana }
+  }, { merge: true });
+
+  renderBotones();
 }
 
 async function resetHoy() {
   await setDoc(doc(db, "config", "restricciones"), {
-    restricciones: {
-      hoy: null
-    }
+    restricciones: { hoy: null }
   }, { merge: true });
 
-  document.getElementById("estadoReglas").innerText =
-    "Hoy reset (auto)";
-}
-
-  async function setMananaHolo(holo, tipo) {
-  await setDoc(doc(db, "config", "restricciones"), {
-    restricciones: {
-      manana: {
-        [holo]: { tipo: tipo }
-      }
-    }
-  }, { merge: true });
-
-  document.getElementById("estadoReglas").innerText =
-    "Mañana " + holo + ": " + tipo;
+  renderBotones();
 }
 
 async function resetManana() {
   await setDoc(doc(db, "config", "restricciones"), {
-    restricciones: {
-      manana: null
-    }
+    restricciones: { manana: null }
   }, { merge: true });
 
-  document.getElementById("estadoReglas").innerText =
-    "Mañana reset";
+  renderBotones();
 }
-  async function cargarModo() {
-    const docSnap = await getDoc(doc(db, "config", "restricciones"));
 
-    const modo = docSnap.exists() ? docSnap.data().modo : "auto";
+async function cargarModo() {
+  const snap = await getDoc(doc(db, "config", "restricciones"));
 
-    document.getElementById("estado").innerText = "Modo actual: " + modo;
-  }
+  if (!snap.exists()) return;
 
-  window.setModo = setModo;
-  window.setHoyHolo = setHoyHolo;
-  window.resetHoy = resetHoy;
-  window.setMananaHolo = setMananaHolo;
-  window.resetManana = resetManana;
+  const data = snap.data();
+  document.getElementById("estado").innerText = "Modo actual: " + (data.modo || "auto");
 
-  window.setHoy = setHoy;
-  window.setManana = setManana;
-  window.setSabado = setSabado;
-  pedirPassword();
+  renderBotones();
+}
 
-  setInterval(cargarModo, 3000);
+async function renderBotones() {
+  const snap = await getDoc(doc(db, "config", "restricciones"));
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+  const restricciones = data.restricciones || {};
+
+  document.querySelectorAll("button[data-dia]").forEach(btn => {
+    const dia = btn.dataset.dia;
+    const holo = btn.dataset.holo;
+    const tipo = btn.dataset.tipo;
+
+    const activo = restricciones?.[dia]?.[holo]?.tipo === tipo;
+
+    btn.classList.toggle("activo", activo);
+  });
+}
+
+window.setModo = setModo;
+window.setHoyHolo = setHoyHolo;
+window.setMananaHolo = setMananaHolo;
+window.resetHoy = resetHoy;
+window.resetManana = resetManana;
+
+pedirPassword();
+setInterval(cargarModo, 3000);
 </script>
 
 </body>
