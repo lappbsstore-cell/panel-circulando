@@ -250,27 +250,21 @@ async function renderBotones() {
     const tipo = btn.dataset.tipo;
 
     const activo = restricciones?.[dia]?.[holo]?.tipo === tipo;
-
     btn.classList.toggle("activo", activo);
   });
-  // 🔥 pintar modo activo
-const modoActual = data.modo || "auto";
 
-document.querySelectorAll("button[data-modo]").forEach(btn => {
-  if (btn.dataset.modo === modoActual) {
-    btn.classList.add("activo");
-  } else {
-    btn.classList.remove("activo");
-  }
-});
-  // 🔥 👉 AQUÍ PEGAS ESTO
-  const divResumen = document.getElementById("resumenHoy");
+  // 🔥 modo activo
+  const modoActual = data.modo || "auto";
 
-if (!divResumen) return;
+  document.querySelectorAll("button[data-modo]").forEach(btn => {
+    if (btn.dataset.modo === modoActual) {
+      btn.classList.add("activo");
+    } else {
+      btn.classList.remove("activo");
+    }
+  });
 
-const resumen = generarResumenHoy(restricciones);
-divResumen.innerText = resumen;
-  
+  // 🔥 resumen (UNA SOLA VEZ)
   const resumen = generarResumenHoy(restricciones);
   document.getElementById("resumenHoy").innerText = resumen;
 }
