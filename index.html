@@ -78,6 +78,9 @@ button {
 <button onclick="resetManana()">🔄 RESET MAÑANA</button>
 
 <h3>Historial</h3>
+<button onclick="limpiarHistorial()" style="background:#555;color:white;">
+  🧹 Limpiar historial
+</button>
 <div id="historial" style="font-size:14px;"></div>
 
 <script type="module">
@@ -289,19 +292,41 @@ async function renderHistorial() {
     return;
   }
 
-  div.innerHTML = historial.map(h => `
-    <div style="margin-bottom:6px;">
-      🕒 ${h.fecha} — ${h.tipo} ${h.holograma || ""} ${h.valor}
-    </div>
-  `).join("");
+  function colorPorTipo(tipo) {
+    if (tipo === "modo") return "#FF9800";      // naranja
+    if (tipo === "hoy") return "#2196F3";       // azul
+    if (tipo === "mañana") return "#9C27B0";    // morado
+    if (tipo === "reset") return "#f44336";     // rojo
+    return "#555";
+  }
+
+  div.innerHTML = historial.map(h => {
+    const color = colorPorTipo(h.tipo);
+
+    return `
+      <div style="margin-bottom:6px; color:${color}">
+        🕒 ${h.fecha} — ${h.tipo} ${h.holograma || ""} ${h.valor}
+      </div>
+    `;
+  }).join("");
 }
 
+  async function limpiarHistorial() {
+  const ref = doc(db, "config", "restricciones");
+
+  await setDoc(ref, {
+    historial: []
+  }, { merge: true });
+
+  renderHistorial();
+}
   
 window.setModo = setModo;
 window.setHoyHolo = setHoyHolo;
 window.setMananaHolo = setMananaHolo;
 window.resetHoy = resetHoy;
 window.resetManana = resetManana;
+window.limpiarHistorial = limpiarHistorial;
 
 pedirPassword();
 
