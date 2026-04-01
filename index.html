@@ -107,10 +107,7 @@ async function setModo(modo) {
     modo: modo,
     password: passwordIngresada
   }, { merge: true });
-await guardarHistorial({
-  tipo: "modo",
-  valor: modo
-});
+
 
   await guardarHistorial({
   tipo: "modo",
@@ -223,7 +220,10 @@ async function cargarModo() {
 
   renderBotones();
   renderHistorial(); // 🔥 ESTA LÍNEA LA AGREGAS
-  function generarResumenHoy(restricciones) {
+  
+}
+
+function generarResumenHoy(restricciones) {
   const hoy = restricciones?.hoy;
 
   if (!hoy || Object.keys(hoy).length === 0) {
@@ -236,8 +236,7 @@ async function cargarModo() {
 
   return "Hoy: " + partes.join(", ");
 }
-}
-
+  
 async function renderBotones() {
   const snap = await getDoc(doc(db, "config", "restricciones"));
   if (!snap.exists()) return;
