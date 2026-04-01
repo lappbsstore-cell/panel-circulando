@@ -29,11 +29,21 @@ button {
 <button class="fase1" onclick="setModo('fase1')">FASE 1</button>
 <button class="fase2" onclick="setModo('fase2')">FASE 2</button>
 
-<h3>Hoy</h3>
+<h3>Hoy (por holograma)</h3>
 
-<button onclick="setHoy('pares')">HOY PARES</button>
-<button onclick="setHoy('nones')">HOY NONES</button>
-<button onclick="setHoy('todos')">HOY TODOS</button>
+<button onclick="setHoyHolo('1','pares')">H1 PARES</button>
+<button onclick="setHoyHolo('1','nones')">H1 NONES</button>
+<button onclick="setHoyHolo('1','todos')">H1 TODOS</button>
+
+<button onclick="setHoyHolo('00','pares')">H00 PARES</button>
+<button onclick="setHoyHolo('00','nones')">H00 NONES</button>
+<button onclick="setHoyHolo('00','todos')">H00 TODOS</button>
+
+<button onclick="setHoyHolo('2','todos')">H2 TODOS</button>
+
+<br><br>
+
+<button onclick="resetHoy()">🔄 RESET HOY</button>
 
 <h3>Mañana</h3>
 
@@ -129,7 +139,29 @@ button {
 
   document.getElementById("estadoReglas").innerText = "Sábado " + holo + ": " + tipo;
 }
+async function setHoyHolo(holo, tipo) {
+  await setDoc(doc(db, "config", "restricciones"), {
+    restricciones: {
+      hoy: {
+        [holo]: { tipo: tipo }
+      }
+    }
+  }, { merge: true });
 
+  document.getElementById("estadoReglas").innerText =
+    "Hoy " + holo + ": " + tipo;
+}
+
+async function resetHoy() {
+  await setDoc(doc(db, "config", "restricciones"), {
+    restricciones: {
+      hoy: {}
+    }
+  }, { merge: true });
+
+  document.getElementById("estadoReglas").innerText =
+    "Hoy reset";
+}
   async function cargarModo() {
     const docSnap = await getDoc(doc(db, "config", "restricciones"));
 
@@ -139,6 +171,8 @@ button {
   }
 
   window.setModo = setModo;
+  window.setHoyHolo = setHoyHolo;
+  window.resetHoy = resetHoy;
 
   window.setHoy = setHoy;
   window.setManana = setManana;
