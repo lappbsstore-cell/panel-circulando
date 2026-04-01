@@ -312,6 +312,10 @@ async function renderHistorial() {
 }
 
   async function limpiarHistorial() {
+  const confirmar = confirm("¿Seguro que quieres borrar el historial?");
+
+  if (!confirmar) return;
+
   const ref = doc(db, "config", "restricciones");
 
   await setDoc(ref, {
