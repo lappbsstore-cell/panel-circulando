@@ -218,7 +218,7 @@ async function cargarModo() {
   const data = snap.data();
   document.getElementById("estado").innerText = "Modo actual: " + (data.modo || "auto");
 
-  renderBotones();
+  await renderBotones();
   renderHistorial(); // 🔥 ESTA LÍNEA LA AGREGAS
   
 }
@@ -264,6 +264,13 @@ document.querySelectorAll("button[data-modo]").forEach(btn => {
   }
 });
   // 🔥 👉 AQUÍ PEGAS ESTO
+  const divResumen = document.getElementById("resumenHoy");
+
+if (!divResumen) return;
+
+const resumen = generarResumenHoy(restricciones);
+divResumen.innerText = resumen;
+  
   const resumen = generarResumenHoy(restricciones);
   document.getElementById("resumenHoy").innerText = resumen;
 }
@@ -300,6 +307,7 @@ window.resetManana = resetManana;
 pedirPassword();
 
 setTimeout(() => {
+  renderBotones();
   renderHistorial();
 }, 1000);
 
