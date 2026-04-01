@@ -64,6 +64,26 @@ button {
 
 <h3>Mañana</h3>
 
+<h3>Configurar Fase 1</h3>
+
+<button onclick="setFase1('00','pares')">H00 PARES</button>
+<button onclick="setFase1('00','nones')">H00 NONES</button>
+<button onclick="setFase1('00','todos')">H00 TODOS</button>
+
+<button onclick="setFase1('0','pares')">H0 PARES</button>
+<button onclick="setFase1('0','nones')">H0 NONES</button>
+<button onclick="setFase1('0','todos')">H0 TODOS</button>
+
+<button onclick="setFase1('1','pares')">H1 PARES</button>
+<button onclick="setFase1('1','nones')">H1 NONES</button>
+<button onclick="setFase1('1','todos')">H1 TODOS</button>
+
+<button onclick="setFase1('2','todos')">H2 TODOS</button>
+
+<button onclick="guardarFase1Config()" style="background:#FF9800;color:white;">
+  💾 Guardar Fase 1
+</button>
+  
 <button data-dia="manana" data-holo="00" data-tipo="pares" onclick="setMananaHolo('00','pares')">H00 PARES</button>
 <button data-dia="manana" data-holo="00" data-tipo="nones" onclick="setMananaHolo('00','nones')">H00 NONES</button>
 <button data-dia="manana" data-holo="00" data-tipo="todos" onclick="setMananaHolo('00','todos')">H00 TODOS</button>
@@ -77,6 +97,26 @@ button {
 <button data-dia="manana" data-holo="1" data-tipo="todos" onclick="setMananaHolo('1','todos')">H1 TODOS</button>
 
 <button data-dia="manana" data-holo="2" data-tipo="todos" onclick="setMananaHolo('2','todos')">H2 TODOS</button>
+
+<h3>Configurar Fase 1</h3>
+
+<button onclick="setFase1('00','pares')">H00 PARES</button>
+<button onclick="setFase1('00','nones')">H00 NONES</button>
+<button onclick="setFase1('00','todos')">H00 TODOS</button>
+
+<button onclick="setFase1('0','pares')">H0 PARES</button>
+<button onclick="setFase1('0','nones')">H0 NONES</button>
+<button onclick="setFase1('0','todos')">H0 TODOS</button>
+
+<button onclick="setFase1('1','pares')">H1 PARES</button>
+<button onclick="setFase1('1','nones')">H1 NONES</button>
+<button onclick="setFase1('1','todos')">H1 TODOS</button>
+
+<button onclick="setFase1('2','todos')">H2 TODOS</button>
+
+<button onclick="guardarFase1Config()" style="background:#FF9800;color:white;">
+  💾 Guardar Fase 1
+</button>
 
 <button onclick="resetManana()">🔄 RESET MAÑANA</button>
 <button onclick="anunciarFase1Manana()" style="background:#FF9800;color:white;">
@@ -336,25 +376,42 @@ async function renderHistorial() {
     `;
   }).join("");
 }
-async function guardarFase1Config() {
-  const ref = doc(db, "config", "restricciones");
-  const snap = await getDoc(ref);
 
-  let data = snap.exists() ? snap.data() : {};
-  let restricciones = data.restricciones || {};
-  let hoy = restricciones.hoy || {};
+// 🔥 CONFIGURACIÓN TEMPORAL DE FASE 1
+let fase1Temp = {};
+
+function setFase1(holo, tipo) {
+  if (fase1Temp[holo] && fase1Temp[holo].tipo === tipo) {
+    delete fase1Temp[holo];
+  } else {
+    fase1Temp[holo] = { tipo };
+  }
+
+  console.log("Fase1Temp:", fase1Temp);
+}
+
+// 🔥 GUARDAR CONFIGURACIÓN
+async function guardarFase1Config() {
+  if (Object.keys(fase1Temp).length === 0) {
+    alert("Configura al menos un holograma");
+    return;
+  }
+
+  const ref = doc(db, "config", "restricciones");
 
   await setDoc(ref, {
-    fase1Config: hoy
+    fase1Config: fase1Temp
   }, { merge: true });
 
   await guardarHistorial({
     tipo: "config",
-    valor: "fase1 guardada"
+    valor: "fase1 actualizada"
   });
 
   alert("Fase 1 guardada correctamente");
 }
+
+
   async function limpiarHistorial() {
   const confirmar = confirm("¿Seguro que quieres borrar el historial?");
 
@@ -431,6 +488,8 @@ window.resetManana = resetManana;
 window.limpiarHistorial = limpiarHistorial;
 window.anunciarFase1Manana = anunciarFase1Manana;
 window.cancelarManana = cancelarManana;
+window.guardarFase1Config = guardarFase1Config;
+window.setFase1 = setFase1;
 window.guardarFase1Config = guardarFase1Config;
 
 pedirPassword();
