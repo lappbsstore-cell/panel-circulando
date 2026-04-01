@@ -218,7 +218,7 @@ async function cargarModo() {
   const data = snap.data();
   document.getElementById("estado").innerText = "Modo actual: " + (data.modo || "auto");
 
-  await renderBotones();
+  renderBotones();
   renderHistorial(); // 🔥 ESTA LÍNEA LA AGREGAS
   
 }
