@@ -224,22 +224,22 @@ async function cargarModo() {
 }
 
 function generarResumen(restricciones) {
-  function generarTexto(diaData, label) {
+  function generarTexto(diaData, label, color) {
     if (!diaData || Object.keys(diaData).length === 0) {
-      return `${label}: automático`;
+      return `<div style="color:${color}">${label}: automático</div>`;
     }
 
     const partes = Object.entries(diaData).map(([holo, val]) => {
       return `H${holo} ${val.tipo}`;
     });
 
-    return `${label}: ` + partes.join(", ");
+    return `<div style="color:${color}">${label}: ${partes.join(", ")}</div>`;
   }
 
-  const hoy = generarTexto(restricciones?.hoy, "Hoy");
-  const manana = generarTexto(restricciones?.manana, "Mañana");
+  const hoy = generarTexto(restricciones?.hoy, "Hoy", "#2196F3");
+  const manana = generarTexto(restricciones?.manana, "Mañana", "#9C27B0");
 
-  return hoy + "\n" + manana;
+  return hoy + manana;
 }
   
 async function renderBotones() {
