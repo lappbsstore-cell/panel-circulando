@@ -83,25 +83,25 @@ button {
 
 <h3>Configurar Fase 1</h3>
 
-<button onclick="setFase1('00','pares')">H00 PARES</button>
-<button onclick="setFase1('00','nones')">H00 NONES</button>
-<button onclick="setFase1('00','todos')">H00 TODOS</button>
+<button data-fase1="00-pares" onclick="setFase1('00','pares')">H00 PARES</button>
+<button data-fase1="00-nones" onclick="setFase1('00','nones')">H00 NONES</button>
+<button data-fase1="00-todos" onclick="setFase1('00','todos')">H00 TODOS</button>
 
-<button onclick="setFase1('0','pares')">H0 PARES</button>
-<button onclick="setFase1('0','nones')">H0 NONES</button>
-<button onclick="setFase1('0','todos')">H0 TODOS</button>
+<button data-fase1="0-pares" onclick="setFase1('0','pares')">H0 PARES</button>
+<button data-fase1="0-nones" onclick="setFase1('0','nones')">H0 NONES</button>
+<button data-fase1="0-todos" onclick="setFase1('0','todos')">H0 TODOS</button>
 
-<button onclick="setFase1('1','pares')">H1 PARES</button>
-<button onclick="setFase1('1','nones')">H1 NONES</button>
-<button onclick="setFase1('1','todos')">H1 TODOS</button>
+<button data-fase1="1-pares" onclick="setFase1('1','pares')">H1 PARES</button>
+<button data-fase1="1-nones" onclick="setFase1('1','nones')">H1 NONES</button>
+<button data-fase1="1-todos" onclick="setFase1('1','todos')">H1 TODOS</button>
 
-<button onclick="setFase1('2','todos')">H2 TODOS</button>
+<button data-fase1="2-todos" onclick="setFase1('2','todos')">H2 TODOS</button>
 
-<button onclick="guardarFase1Config()" style="background:#FF9800;color:white;">
+<button data-guardar-fase1 onclick="guardarFase1Config()" style="background:#FF9800;color:white;">
   💾 Guardar Fase 1
 </button>
   
-<button onclick="anunciarFase1Manana()" style="background:#FF9800;color:white;">
+<button data-accion="anunciar" onclick="anunciarFase1Manana()" style="background:#FF9800;color:white;">
   📢 Anunciar Fase 1 mañana
 </button>
 
@@ -323,6 +323,18 @@ async function renderBotones() {
   // 🔥 resumen (UNA SOLA VEZ)
   const resumen = generarResumen(restricciones);
   document.getElementById("resumenHoy").innerHTML = resumen;
+
+// 🔥 detectar si mañana es fase 1
+const manana = data.restricciones?.manana || {};
+
+const esFase1 =
+  manana["0"]?.tipo === "todos" &&
+  manana["1"]?.tipo === "pares";
+
+document.querySelectorAll("[data-accion='anunciar']").forEach(btn => {
+  btn.classList.toggle("activo", esFase1);
+});
+  
 }
 
 async function renderHistorial() {
@@ -363,34 +375,30 @@ async function renderHistorial() {
 let fase1Temp = {};
 
 function setFase1(holo, tipo) {
+  const key = `${holo}-${tipo}`;
+
   if (fase1Temp[holo] && fase1Temp[holo].tipo === tipo) {
     delete fase1Temp[holo];
   } else {
     fase1Temp[holo] = { tipo };
   }
 
-  console.log("Fase1Temp:", fase1Temp);
-}
+  // 🔥 pintar botones activos
+  document.querySelectorAll("[data-fase1]").forEach(btn => {
+    const k = btn.dataset.fase1;
+    const [h, t] = k.split("-");
 
-// 🔥 GUARDAR CONFIGURACIÓN
-async function guardarFase1Config() {
-  if (Object.keys(fase1Temp).length === 0) {
-    alert("Configura al menos un holograma");
-    return;
-  }
-
-  const ref = doc(db, "config", "restricciones");
-
-  await setDoc(ref, {
-    fase1Config: fase1Temp
-  }, { merge: true });
-
-  await guardarHistorial({
-    tipo: "config",
-    valor: "fase1 actualizada"
+    const activo = fase1Temp[h]?.tipo === t;
+    btn.classList.toggle("activo", activo);
   });
 
-  alert("Fase 1 guardada correctamente");
+  // 🔥 activar botón guardar
+  const btnGuardar = document.querySelector("[data-guardar-fase1]");
+  if (btnGuardar) {
+    btnGuardar.classList.toggle("activo", Object.keys(fase1Temp).length > 0);
+  }
+
+  console.log("Fase1Temp:", fase1Temp);
 }
 
 
