@@ -324,16 +324,21 @@ async function renderBotones() {
   const resumen = generarResumen(restricciones);
   document.getElementById("resumenHoy").innerHTML = resumen;
 
-// 🔥 detectar si mañana es fase 1
-const manana = data.restricciones?.manana || {};
+// 🔥 detectar si mañana es fase 1 (PROTEGIDO)
+try {
+  const manana = data.restricciones?.manana || {};
 
-const esFase1 =
-  manana["0"]?.tipo === "todos" &&
-  manana["1"]?.tipo === "pares";
+  const esFase1 =
+    manana["0"]?.tipo === "todos" &&
+    manana["1"]?.tipo === "pares";
 
-document.querySelectorAll("[data-accion='anunciar']").forEach(btn => {
-  btn.classList.toggle("activo", esFase1);
-});
+  document.querySelectorAll("[data-accion='anunciar']").forEach(btn => {
+    btn.classList.toggle("activo", esFase1);
+  });
+
+} catch (e) {
+  console.log("Error en detección de fase1:", e);
+}
   
 }
 
@@ -374,6 +379,27 @@ async function renderHistorial() {
 // 🔥 CONFIGURACIÓN TEMPORAL DE FASE 1
 let fase1Temp = {};
 
+async function guardarFase1Config() {
+  if (Object.keys(fase1Temp).length === 0) {
+    alert("Configura al menos un holograma");
+    return;
+  }
+
+  const ref = doc(db, "config", "restricciones");
+
+  await setDoc(ref, {
+    fase1Config: fase1Temp
+  }, { merge: true });
+
+  await guardarHistorial({
+    tipo: "config",
+    valor: "fase1 actualizada"
+  });
+
+  alert("Fase 1 guardada correctamente");
+}
+  
+  
 function setFase1(holo, tipo) {
   const key = `${holo}-${tipo}`;
 
