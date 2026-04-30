@@ -51,7 +51,7 @@ button {
   data-holo="00" 
   data-tipo="color"
   data-color="amarillo"
-  onclick="setHoyColor('00','amarillo')">
+  onclick="setHoyColor(event,'00','amarillo')">
 🟡 H00 AMARILLO
 </button>
 
@@ -60,7 +60,7 @@ button {
   data-holo="00" 
   data-tipo="color"
   data-color="rosa"
-  onclick="setHoyColor('00','rosa')">
+  onclick="setHoyColor(event,'00','rosa')">
 🌸 H00 ROSA
 </button>
 
@@ -69,7 +69,7 @@ button {
   data-holo="00" 
   data-tipo="color"
   data-color="rojo"
-  onclick="setHoyColor('00','rojo')">
+  onclick="setHoyColor(event,'00','rojo')">
 🔴 H00 ROJO
 </button>
 
@@ -78,7 +78,7 @@ button {
   data-holo="00" 
   data-tipo="color"
   data-color="verde"
-  onclick="setHoyColor('00','verde')">
+  onclick="setHoyColor(event,'00','verde')">
 🟢 H00 VERDE
 </button>
 
@@ -87,7 +87,7 @@ button {
   data-holo="00" 
   data-tipo="color"
   data-color="azul"
-  onclick="setHoyColor('00','azul')">
+  onclick="setHoyColor(event,'00','azul')">
 🔵 H00 AZUL
 </button>
 
@@ -160,11 +160,9 @@ button {
 <div id="historial" style="font-size:14px;"></div>
 
 <style>
-<style>
 .btn-activo {
-  outline: 3px solid #00ff00;
-  box-shadow: 0 0 10px #00ff00;
-  opacity: 0.8;
+  background: #4CAF50 !important;
+  color: white;
 }
 </style>
   
@@ -246,7 +244,7 @@ async function setHoyHolo(holo, tipo) {
   renderBotones();
 }
 
-  async function setHoyColor(holo, color) {
+  async function setHoyColor(event, holo, color) {
   const ref = doc(db, "config", "restricciones");
   const snap = await getDoc(ref);
 
@@ -292,6 +290,8 @@ const botones = document.querySelectorAll(
 botones.forEach(btn => {
   btn.classList.toggle("btn-activo");
 });
+    const btn = event.target;
+btn.classList.toggle("btn-activo");
 }
 
 async function setMananaHolo(holo, tipo) {
@@ -413,7 +413,8 @@ let activo = false;
 const color = btn.dataset.color;
 
 if (tipo === "color") {
-  activo = regla?.tipo === "color" && regla?.color === color;
+  activo = regla?.tipo === "color" && regla?.colores?.includes(color);
+}
 } else {
   activo = regla?.tipo === tipo;
 }
