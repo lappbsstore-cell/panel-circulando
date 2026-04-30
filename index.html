@@ -159,6 +159,14 @@ button {
 </button>
 <div id="historial" style="font-size:14px;"></div>
 
+<style>
+.btn-activo {
+  border: 3px solid black;
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+</style>
+  
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -274,6 +282,15 @@ async function setHoyHolo(holo, tipo) {
   await setDoc(ref, data, { merge: true });
 
   console.log("🔥 COLORES:", actual.colores);
+
+    // 🔥 toggle visual del botón
+const botones = document.querySelectorAll(
+  `button[data-dia="hoy"][data-holo="${holo}"][data-color="${color}"]`
+);
+
+botones.forEach(btn => {
+  btn.classList.toggle("btn-activo");
+});
 }
 
 async function setMananaHolo(holo, tipo) {
