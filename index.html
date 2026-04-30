@@ -241,17 +241,27 @@ async function setHoyHolo(holo, tipo) {
   const ref = doc(db, "config", "restricciones");
   const snap = await getDoc(ref);
 
-  // data actual
   let data = snap.exists() ? snap.data() : {};
-  let hoy = data.restricciones?.hoy || {};
 
-  // lo que ya tenía ese holograma
-  let actual = hoy[holo] || { tipo: "color", colores: [] };
+  // asegurar estructura
+  if (!data.restricciones) data.restricciones = {};
+  if (!data.restricciones.hoy) data.restricciones.hoy = {};
 
-  // asegurar array
-  if (!actual.colores) actual.colores = [];
+  let actual = data.restricciones.hoy[holo];
 
-  // 🔁 toggle (agrega o quita)
+  // si no existe, crear nuevo
+  if (!actual) {
+    actual = {
+      tipo: "color",
+      colores: []
+    };
+  }
+
+  if (!actual.colores) {
+    actual.colores = [];
+  }
+
+  // 🔁 toggle
   if (actual.colores.includes(color)) {
     actual.colores = actual.colores.filter(c => c !== color);
   } else {
@@ -259,16 +269,11 @@ async function setHoyHolo(holo, tipo) {
   }
 
   // guardar
-  hoy[holo] = {
-    tipo: "color",
-    colores: actual.colores
-  };
+  data.restricciones.hoy[holo] = actual;
 
-  await setDoc(ref, {
-    restricciones: { hoy }
-  }, { merge: true });
+  await setDoc(ref, data, { merge: true });
 
-  console.log("🔥 COLORES ACTIVOS:", actual.colores);
+  console.log("🔥 COLORES:", actual.colores);
 }
 
 async function setMananaHolo(holo, tipo) {
