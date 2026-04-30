@@ -241,31 +241,34 @@ async function setHoyHolo(holo, tipo) {
   const ref = doc(db, "config", "restricciones");
   const snap = await getDoc(ref);
 
+  // data actual
   let data = snap.exists() ? snap.data() : {};
-  let restricciones = data.restricciones || {};
-  let hoy = restricciones.hoy || {};
+  let hoy = data.restricciones?.hoy || {};
 
-  // toggle
-  if (hoy[holo] && hoy[holo].tipo === "color" && hoy[holo].color === color) {
-    delete hoy[holo];
+  // lo que ya tenía ese holograma
+  let actual = hoy[holo] || { tipo: "color", colores: [] };
+
+  // asegurar array
+  if (!actual.colores) actual.colores = [];
+
+  // 🔁 toggle (agrega o quita)
+  if (actual.colores.includes(color)) {
+    actual.colores = actual.colores.filter(c => c !== color);
   } else {
-    hoy[holo] = {
-      tipo: "color",
-      color: color
-    };
+    actual.colores.push(color);
   }
 
+  // guardar
+  hoy[holo] = {
+    tipo: "color",
+    colores: actual.colores
+  };
+
   await setDoc(ref, {
-    restricciones: { ...restricciones, hoy }
+    restricciones: { hoy }
   }, { merge: true });
 
-  await guardarHistorial({
-    tipo: "hoy",
-    holograma: holo,
-    valor: "color " + color
-  });
-
-  renderBotones();
+  console.log("🔥 COLORES ACTIVOS:", actual.colores);
 }
 
 async function setMananaHolo(holo, tipo) {
