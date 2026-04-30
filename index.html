@@ -46,6 +46,14 @@ button {
 <button data-dia="hoy" data-holo="00" data-tipo="pares" onclick="setHoyHolo('00','pares')">H00 PARES</button>
 <button data-dia="hoy" data-holo="00" data-tipo="nones" onclick="setHoyHolo('00','nones')">H00 NONES</button>
 <button data-dia="hoy" data-holo="00" data-tipo="todos" onclick="setHoyHolo('00','todos')">H00 TODOS</button>
+  <button 
+  data-dia="hoy" 
+  data-holo="00" 
+  data-tipo="color"
+  data-color="amarillo"
+  onclick="setHoyColor('00','amarillo')">
+🟡 H00 AMARILLO
+</button>
 
 <button data-dia="hoy" data-holo="0" data-tipo="pares" onclick="setHoyHolo('0','pares')">H0 PARES</button>
 <button data-dia="hoy" data-holo="0" data-tipo="nones" onclick="setHoyHolo('0','nones')">H0 NONES</button>
@@ -193,6 +201,37 @@ async function setHoyHolo(holo, tipo) {
   renderBotones();
 }
 
+  async function setHoyColor(holo, color) {
+  const ref = doc(db, "config", "restricciones");
+  const snap = await getDoc(ref);
+
+  let data = snap.exists() ? snap.data() : {};
+  let restricciones = data.restricciones || {};
+  let hoy = restricciones.hoy || {};
+
+  // toggle
+  if (hoy[holo] && hoy[holo].tipo === "color" && hoy[holo].color === color) {
+    delete hoy[holo];
+  } else {
+    hoy[holo] = {
+      tipo: "color",
+      color: color
+    };
+  }
+
+  await setDoc(ref, {
+    restricciones: { ...restricciones, hoy }
+  }, { merge: true });
+
+  await guardarHistorial({
+    tipo: "hoy",
+    holograma: holo,
+    valor: "color " + color
+  });
+
+  renderBotones();
+}
+
 async function setMananaHolo(holo, tipo) {
   const ref = doc(db, "config", "restricciones");
   const snap = await getDoc(ref);
@@ -305,7 +344,17 @@ async function renderBotones() {
     const holo = btn.dataset.holo;
     const tipo = btn.dataset.tipo;
 
-    const activo = restricciones?.[dia]?.[holo]?.tipo === tipo;
+    const regla = restricciones?.[dia]?.[holo];
+
+let activo = false;
+
+const color = btn.dataset.color;
+
+if (tipo === "color") {
+  activo = regla?.tipo === "color" && regla?.color === color;
+} else {
+  activo = regla?.tipo === tipo;
+}
     btn.classList.toggle("activo", activo);
   });
 
@@ -498,6 +547,7 @@ async function cancelarManana() {
   
 window.setModo = setModo;
 window.setHoyHolo = setHoyHolo;
+  window.setHoyColor = setHoyColor;
 window.setMananaHolo = setMananaHolo;
 window.resetHoy = resetHoy;
 window.resetManana = resetManana;
