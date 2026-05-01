@@ -776,30 +776,33 @@ async function renderHistorial() {
 let fase1Temp = {};
 
 async function setFase1Color(event, holo, color) {
+
+  // 1) Quitar todos los colores del mismo holograma
+  const botones = document.querySelectorAll(
+    `button[onclick*="setFase1Color"][onclick*="'${holo}'"]`
+  );
+
+  botones.forEach(btn => {
+    btn.classList.remove("activo");
+  });
+
+  // 2) Activar el botón seleccionado
   const btn = event.target;
-  btn.classList.toggle("activo");
+  btn.classList.add("activo");
 
-  if (!fase1Temp[holo]) {
-    fase1Temp[holo] = { tipo: "color", colores: [] };
-  }
+  // 3) Guardar en memoria
+  fase1Temp[holo] = {
+    tipo: "color",
+    colores: [color]
+  };
 
-  if (!fase1Temp[holo].colores) {
-    fase1Temp[holo].colores = [];
-  }
-
-  if (fase1Temp[holo].colores.includes(color)) {
-    fase1Temp[holo].colores =
-      fase1Temp[holo].colores.filter(c => c !== color);
-  } else {
-    fase1Temp[holo].colores.push(color);
-  }
-
+  // 4) Activar botón guardar
   const btnGuardar = document.querySelector("[data-guardar-fase1]");
   if (btnGuardar) {
     btnGuardar.classList.add("activo");
   }
 
-  console.log("🔥 FASE1 TEMP:", fase1Temp);
+  console.log("🔥 FASE1 COLOR:", fase1Temp);
 }
 
 async function guardarFase1Config() {
