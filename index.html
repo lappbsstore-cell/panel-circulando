@@ -759,6 +759,33 @@ async function renderHistorial() {
 // 🔥 CONFIGURACIÓN TEMPORAL DE FASE 1
 let fase1Temp = {};
 
+async function setFase1Color(event, holo, color) {
+  const btn = event.target;
+  btn.classList.toggle("activo");
+
+  if (!fase1Temp[holo]) {
+    fase1Temp[holo] = { tipo: "color", colores: [] };
+  }
+
+  if (!fase1Temp[holo].colores) {
+    fase1Temp[holo].colores = [];
+  }
+
+  if (fase1Temp[holo].colores.includes(color)) {
+    fase1Temp[holo].colores =
+      fase1Temp[holo].colores.filter(c => c !== color);
+  } else {
+    fase1Temp[holo].colores.push(color);
+  }
+
+  const btnGuardar = document.querySelector("[data-guardar-fase1]");
+  if (btnGuardar) {
+    btnGuardar.classList.add("activo");
+  }
+
+  console.log("🔥 FASE1 TEMP:", fase1Temp);
+}
+
 async function guardarFase1Config() {
   if (Object.keys(fase1Temp).length === 0) {
     alert("Configura al menos un holograma");
@@ -781,58 +808,7 @@ async function guardarFase1Config() {
   
   
 function setFase1(holo, tipo) {
-  async function setFase1Color(event, holo, color) {
-  const btn = event.target;
-  btn.classList.toggle("btn-activo");
-
-  // guardar en fase1Temp (igual que setFase1)
-  if (!fase1Temp[holo]) {
-    fase1Temp[holo] = { tipo: "color", colores: [] };
-  }
-
-  if (!fase1Temp[holo].colores) {
-    fase1Temp[holo].colores = [];
-  }
-
-  if (fase1Temp[holo].colores.includes(color)) {
-    fase1Temp[holo].colores = fase1Temp[holo].colores.filter(c => c !== color);
-  } else {
-    fase1Temp[holo].colores.push(color);
-  }
-
-  console.log("🔥 FASE1 TEMP:", fase1Temp);
-
-  // activar botón guardar
-  const btnGuardar = document.querySelector("[data-guardar-fase1]");
-  if (btnGuardar) {
-    btnGuardar.classList.add("activo");
-  }
-}
-  const key = `${holo}-${tipo}`;
-
-  if (fase1Temp[holo] && fase1Temp[holo].tipo === tipo) {
-    delete fase1Temp[holo];
-  } else {
-    fase1Temp[holo] = { tipo };
-  }
-
-  // 🔥 pintar botones activos
-  document.querySelectorAll("[data-fase1]").forEach(btn => {
-    const k = btn.dataset.fase1;
-    const [h, t] = k.split("-");
-
-    const activo = fase1Temp[h]?.tipo === t;
-    btn.classList.toggle("activo", activo);
-  });
-
-  // 🔥 activar botón guardar
-  const btnGuardar = document.querySelector("[data-guardar-fase1]");
-  if (btnGuardar) {
-    btnGuardar.classList.toggle("activo", Object.keys(fase1Temp).length > 0);
-  }
-
-  console.log("Fase1Temp:", fase1Temp);
-}
+  
 
 
   async function limpiarHistorial() {
