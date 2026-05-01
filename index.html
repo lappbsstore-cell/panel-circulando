@@ -420,11 +420,10 @@ async function setMananaColor(event, holo, color) {
   const snap = await getDoc(ref);
 
   let data = snap.exists() ? snap.data() : {};
+  let restricciones = data.restricciones || {};
+  let manana = restricciones.manana || {};
 
-  if (!data.restricciones) data.restricciones = {};
-  if (!data.restricciones.manana) data.restricciones.manana = {};
-
-  let actual = data.restricciones.manana[holo];
+  let actual = manana[holo];
 
   if (!actual) {
     actual = { tipo: "color", colores: [] };
@@ -438,21 +437,17 @@ async function setMananaColor(event, holo, color) {
     actual.colores.push(color);
   }
 
-const btn = event.target;
-btn.classList.toggle("activo");
-  
-  data.restricciones.manana[holo] = actual;
+  manana[holo] = actual;
 
-await setDoc(ref, {
-  restricciones: {
-    ...data.restricciones,
-    manana: data.restricciones.manana
-  }
-}, { merge: true });
+  await setDoc(ref, {
+    restricciones: {
+      ...restricciones,
+      manana
+    }
+  }, { merge: true });
 
-console.log("🌙 COLORES MAÑANA:", actual.colores);
-
-renderBotones();
+  // 🔥 IMPORTANTE: refresca visual
+  renderBotones();
 }
   
 async function setModo(modo) {
@@ -555,10 +550,10 @@ const botones = document.querySelectorAll(
 );
 
 botones.forEach(btn => {
-  btn.classList.toggle("btn-activo");
+  btn.classList.toggle("activo");
 });
     const btn = event.target;
-btn.classList.toggle("btn-activo");
+btn.classList.toggle("activo");
 }
 
 async function setMananaHolo(holo, tipo) {
