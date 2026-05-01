@@ -815,10 +815,22 @@ async function guardarFase1Config() {
     fase1Config: fase1Temp
   }, { merge: true });
 
-  await guardarHistorial({
-    tipo: "config",
-    valor: "fase1 actualizada"
-  });
+ const resumen = Object.entries(fase1Temp)
+  .map(([holo, val]) => {
+    if (val.colores) {
+      return `H${holo} colores: ${val.colores.join(", ")}`;
+    }
+    if (val.tipo) {
+      return `H${holo} ${val.tipo}`;
+    }
+    return "";
+  })
+  .join(" | ");
+
+await guardarHistorial({
+  tipo: "config",
+  valor: resumen
+});
 
   alert("Fase 1 guardada correctamente");
 }
