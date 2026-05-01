@@ -391,12 +391,7 @@ button {
 </button>
 <div id="historial" style="font-size:14px;"></div>
 
-<style>
-.btn-activo {
-  background: #4CAF50 !important;
-  color: white;
-}
-</style>
+
   
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -422,7 +417,7 @@ function pedirPassword() {
 
 async function setMananaColor(event, holo, color) {
   const btn = event.target;
-  btn.classList.toggle("btn-activo");
+  btn.classList.toggle("activo");
 
   const ref = doc(db, "config", "restricciones");
   const snap = await getDoc(ref);
