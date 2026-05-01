@@ -438,14 +438,21 @@ async function setMananaColor(event, holo, color) {
     actual.colores.push(color);
   }
 
+const btn = event.target;
+btn.classList.toggle("activo");
+  
   data.restricciones.manana[holo] = actual;
 
-  await setDoc(ref, data, { merge: true });
+await setDoc(ref, {
+  restricciones: {
+    ...data.restricciones,
+    manana: data.restricciones.manana
+  }
+}, { merge: true });
 
-  console.log("🌙 COLORES MAÑANA:", actual.colores);
+console.log("🌙 COLORES MAÑANA:", actual.colores);
 
-  // 🔥 ESTA ES LA CLAVE
-  renderBotones();
+renderBotones();
 }
   
 async function setModo(modo) {
