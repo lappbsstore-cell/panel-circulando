@@ -376,6 +376,10 @@ button {
 <button data-guardar-fase1 onclick="guardarFase1Config()" style="background:#FF9800;color:white;">
   💾 Guardar Fase 1
 </button>
+
+<button onclick="resetFase1()" style="background:#f44336;color:white;">
+  🔄 Reset Fase 1
+</button>
   
 <button data-accion="anunciar" onclick="anunciarFase1Manana()" style="background:#FF9800;color:white;">
   📢 Anunciar Fase 1 mañana
@@ -835,6 +839,24 @@ await guardarHistorial({
   alert("Fase 1 guardada correctamente");
 }
   
+function resetFase1() {
+
+  // 1) limpiar memoria
+  fase1Temp = {};
+
+  // 2) quitar todos los botones activos de fase1
+  document.querySelectorAll("[data-fase1], [data-fase1-color]").forEach(btn => {
+    btn.classList.remove("activo");
+  });
+
+  // 3) quitar activo del botón guardar
+  const btnGuardar = document.querySelector("[data-guardar-fase1]");
+  if (btnGuardar) {
+    btnGuardar.classList.remove("activo");
+  }
+
+  console.log("🧹 FASE1 reiniciada");
+}
   
 function setFase1(holo, tipo) {
 
@@ -947,6 +969,7 @@ window.cancelarManana = cancelarManana;
 window.guardarFase1Config = guardarFase1Config;
 window.setFase1 = setFase1;
 window.setFase1Color = setFase1Color; // 🔥 ESTA FALTABA
+window.resetFase1 = resetFase1;
 window.guardarFase1Config = guardarFase1Config;
 
 pedirPassword();
