@@ -416,8 +416,13 @@ function pedirPassword() {
 }
 
 async function setMananaColor(event, holo, color) {
-  const btn = event.target;
-  btn.classList.toggle("activo");
+  const botones = document.querySelectorAll(
+  `button[data-dia="manana"][data-holo="${holo}"][data-color="${color}"]`
+);
+
+botones.forEach(btn => {
+  btn.classList.toggle("btn-activo");
+});
 
   const ref = doc(db, "config", "restricciones");
   const snap = await getDoc(ref);
