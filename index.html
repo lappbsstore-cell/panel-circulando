@@ -357,11 +357,11 @@ button {
 <button data-fase1="00-nones" onclick="setFase1('00','nones')">H00 NONES</button>
 <button data-fase1="00-todos" onclick="setFase1('00','todos')">H00 TODOS</button>
 
-<button onclick="setFase1Color(event,'00','amarillo')">🟡 H00 AMARILLO</button>
-<button onclick="setFase1Color(event,'00','rosa')">🌸 H00 ROSA</button>
-<button onclick="setFase1Color(event,'00','rojo')">🔴 H00 ROJO</button>
-<button onclick="setFase1Color(event,'00','verde')">🟢 H00 VERDE</button>
-<button onclick="setFase1Color(event,'00','azul')">🔵 H00 AZUL</button>
+<button data-fase1-color="00" data-color="amarillo" onclick="setFase1Color(event,'00','amarillo')">🟡 H00 AMARILLO</button>
+<button data-fase1-color="00" data-color="rosa" onclick="setFase1Color(event,'00','rosa')">🌸 H00 ROSA</button>
+<button data-fase1-color="00" data-color="rojo" onclick="setFase1Color(event,'00','rojo')">🔴 H00 ROJO</button>
+<button data-fase1-color="00" data-color="verde" onclick="setFase1Color(event,'00','verde')">🟢 H00 VERDE</button>
+<button data-fase1-color="00" data-color="azul" onclick="setFase1Color(event,'00','azul')">🔵 H00 AZUL</button>
 
 <button data-fase1="0-pares" onclick="setFase1('0','pares')">H0 PARES</button>
 <button data-fase1="0-nones" onclick="setFase1('0','nones')">H0 NONES</button>
@@ -390,7 +390,6 @@ button {
   🧹 Limpiar historial
 </button>
 <div id="historial" style="font-size:14px;"></div>
-
 
   
 <script type="module">
@@ -775,34 +774,41 @@ async function renderHistorial() {
 // 🔥 CONFIGURACIÓN TEMPORAL DE FASE 1
 let fase1Temp = {};
 
-async function setFase1Color(event, holo, color) {
+function setFase1Color(event, holo, color) {
 
-  // 1) Quitar todos los colores del mismo holograma
-  const botones = document.querySelectorAll(
-    `button[onclick*="setFase1Color"][onclick*="'${holo}'"]`
-  );
-
-  botones.forEach(btn => {
-    btn.classList.remove("activo");
-  });
-
-  // 2) Activar el botón seleccionado
   const btn = event.target;
-  btn.classList.add("activo");
 
-  // 3) Guardar en memoria
-  fase1Temp[holo] = {
-    tipo: "color",
-    colores: [color]
-  };
+  // 1) Asegurar estructura
+  if (!fase1Temp[holo]) {
+    fase1Temp[holo] = {
+      tipo: "color",
+      colores: []
+    };
+  }
 
-  // 4) Activar botón guardar
+  if (!fase1Temp[holo].colores) {
+    fase1Temp[holo].colores = [];
+  }
+
+  // 2) Toggle real (como mañana)
+  if (fase1Temp[holo].colores.includes(color)) {
+    fase1Temp[holo].colores =
+      fase1Temp[holo].colores.filter(c => c !== color);
+
+    btn.classList.remove("activo");
+  } else {
+    fase1Temp[holo].colores.push(color);
+
+    btn.classList.add("activo");
+  }
+
+  // 3) Activar botón guardar
   const btnGuardar = document.querySelector("[data-guardar-fase1]");
   if (btnGuardar) {
     btnGuardar.classList.add("activo");
   }
 
-  console.log("🔥 FASE1 COLOR:", fase1Temp);
+  console.log("🔥 FASE1 MULTICOLOR:", fase1Temp);
 }
 
 async function guardarFase1Config() {
