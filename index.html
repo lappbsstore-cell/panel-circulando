@@ -673,7 +673,8 @@ async function renderBotones() {
     const holo = btn.dataset.holo;
     const tipo = btn.dataset.tipo;
 
-    const regla = restricciones?.[dia]?.[holo];
+   const key = dia === "manana" ? "mañana" : dia;
+const regla = restricciones?.[key]?.[holo];
 
 let activo = false;
 
