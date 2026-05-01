@@ -834,36 +834,27 @@ async function guardarFase1Config() {
   
 function setFase1(holo, tipo) {
 
-  // 1) Quitar selección previa del mismo holograma
-  const botonesMismoHolo = document.querySelectorAll(
+  const botones = document.querySelectorAll(
     `[data-fase1^="${holo}-"]`
   );
 
-  botonesMismoHolo.forEach(btn => {
-    btn.classList.remove("activo");
-  });
-
-  // 2) Activar solo el botón que tocaste
-  const botonSeleccionado = document.querySelector(
+  const btn = document.querySelector(
     `[data-fase1="${holo}-${tipo}"]`
   );
 
-  if (botonSeleccionado) {
-    botonSeleccionado.classList.add("activo");
+  const yaActivo = btn.classList.contains("activo");
+
+  botones.forEach(b => b.classList.remove("activo"));
+
+  if (!yaActivo) {
+    btn.classList.add("activo");
+    fase1Temp[holo] = { tipo };
+  } else {
+    delete fase1Temp[holo];
   }
 
-  // 3) Guardar en memoria temporal (lo que luego se guarda en Firebase)
-  if (!fase1Temp[holo]) {
-    fase1Temp[holo] = {};
-  }
-
-  fase1Temp[holo] = { tipo };
-
-  // 4) Activar botón de guardar
   const btnGuardar = document.querySelector("[data-guardar-fase1]");
-  if (btnGuardar) {
-    btnGuardar.classList.add("activo");
-  }
+  if (btnGuardar) btnGuardar.classList.add("activo");
 
   console.log("🔥 FASE1 TEMP:", fase1Temp);
 }
