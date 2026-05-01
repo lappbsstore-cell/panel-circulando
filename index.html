@@ -777,6 +777,33 @@ async function guardarFase1Config() {
   
   
 function setFase1(holo, tipo) {
+  async function setFase1Color(event, holo, color) {
+  const btn = event.target;
+  btn.classList.toggle("btn-activo");
+
+  // guardar en fase1Temp (igual que setFase1)
+  if (!fase1Temp[holo]) {
+    fase1Temp[holo] = { tipo: "color", colores: [] };
+  }
+
+  if (!fase1Temp[holo].colores) {
+    fase1Temp[holo].colores = [];
+  }
+
+  if (fase1Temp[holo].colores.includes(color)) {
+    fase1Temp[holo].colores = fase1Temp[holo].colores.filter(c => c !== color);
+  } else {
+    fase1Temp[holo].colores.push(color);
+  }
+
+  console.log("🔥 FASE1 TEMP:", fase1Temp);
+
+  // activar botón guardar
+  const btnGuardar = document.querySelector("[data-guardar-fase1]");
+  if (btnGuardar) {
+    btnGuardar.classList.add("activo");
+  }
+}
   const key = `${holo}-${tipo}`;
 
   if (fase1Temp[holo] && fase1Temp[holo].tipo === tipo) {
