@@ -456,6 +456,12 @@ console.log("CLICK MAÑANA COLOR", holo, color);
     }
   }, { merge: true });
 
+  await guardarHistorial({
+  tipo: "mañana",
+  holograma: holo,
+  valor: color
+});
+
   renderBotones();
 }
   
@@ -637,8 +643,11 @@ function generarResumen(restricciones) {
     }
 
     const partes = Object.entries(diaData).map(([holo, val]) => {
-      return `H${holo} ${val.tipo}`;
-    });
+  if (val.tipo === "color" && val.colores?.length) {
+    return `H${holo} ${val.colores.join(", ")}`;
+  }
+  return `H${holo} ${val.tipo}`;
+});
 
     return `<div style="color:${color}">${label}: ${partes.join(", ")}</div>`;
   }
