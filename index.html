@@ -416,6 +416,8 @@ function pedirPassword() {
 }
 
 async function setMananaColor(event, holo, color) {
+   // 👇 AGREGA ESTO
+  const btn = event.target;
   const ref = doc(db, "config", "restricciones");
   const snap = await getDoc(ref);
 
