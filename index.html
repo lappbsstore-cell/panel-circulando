@@ -778,19 +778,14 @@ function setFase1Color(event, holo, color) {
 
   const btn = event.target;
 
-  // 1) Asegurar estructura
   if (!fase1Temp[holo]) {
-    fase1Temp[holo] = {
-      tipo: "color",
-      colores: []
-    };
+    fase1Temp[holo] = {};
   }
 
   if (!fase1Temp[holo].colores) {
     fase1Temp[holo].colores = [];
   }
 
-  // 2) Toggle real (como mañana)
   if (fase1Temp[holo].colores.includes(color)) {
     fase1Temp[holo].colores =
       fase1Temp[holo].colores.filter(c => c !== color);
@@ -802,11 +797,8 @@ function setFase1Color(event, holo, color) {
     btn.classList.add("activo");
   }
 
-  // 3) Activar botón guardar
   const btnGuardar = document.querySelector("[data-guardar-fase1]");
-  if (btnGuardar) {
-    btnGuardar.classList.add("activo");
-  }
+  if (btnGuardar) btnGuardar.classList.add("activo");
 
   console.log("🔥 FASE1 MULTICOLOR:", fase1Temp);
 }
@@ -848,9 +840,12 @@ function setFase1(holo, tipo) {
 
   if (!yaActivo) {
     btn.classList.add("activo");
-    fase1Temp[holo] = { tipo };
+
+    if (!fase1Temp[holo]) fase1Temp[holo] = {};
+
+    fase1Temp[holo].tipo = tipo;
   } else {
-    delete fase1Temp[holo];
+    if (fase1Temp[holo]) delete fase1Temp[holo].tipo;
   }
 
   const btnGuardar = document.querySelector("[data-guardar-fase1]");
@@ -858,7 +853,6 @@ function setFase1(holo, tipo) {
 
   console.log("🔥 FASE1 TEMP:", fase1Temp);
 }
-
 
   async function limpiarHistorial() {
   const confirmar = confirm("¿Seguro que quieres borrar el historial?");
