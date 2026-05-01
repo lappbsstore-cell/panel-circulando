@@ -416,8 +416,16 @@ function pedirPassword() {
 }
 
 async function setMananaColor(event, holo, color) {
-   // 👇 AGREGA ESTO
-  const btn = event.target;
+
+  // 🔥 ACTIVAR VISUAL (igual que HOY)
+  const botones = document.querySelectorAll(
+    `button[data-dia="manana"][data-holo="${holo}"][data-color="${color}"]`
+  );
+
+  botones.forEach(btn => {
+    btn.classList.toggle("activo");
+  });
+
   const ref = doc(db, "config", "restricciones");
   const snap = await getDoc(ref);
 
@@ -448,7 +456,6 @@ async function setMananaColor(event, holo, color) {
     }
   }, { merge: true });
 
-  // 🔥 IMPORTANTE: refresca visual
   renderBotones();
 }
   
