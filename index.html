@@ -385,6 +385,12 @@ button {
   📢 Anunciar Fase 1 mañana
 </button>
 
+  <button
+onclick="notificarContingencia()"
+style="background:#f44336;color:white;">
+🚨 Notificar contingencia
+</button>
+
 <button onclick="cancelarManana()" style="background:#4CAF50;color:white;">
   ❌ Cancelar contingencia mañana
 </button>
@@ -936,6 +942,23 @@ if (Object.keys(manana).length === 0) {
   renderBotones();
 }
 
+async function notificarContingencia() {
+
+  const confirmar =
+    confirm("¿Enviar notificación de contingencia?");
+
+  if (!confirmar) return;
+
+  const ref =
+    doc(db, "config", "notificaciones");
+
+  await setDoc(ref, {
+    contingencia: Date.now()
+  }, { merge: true });
+
+  alert("🚨 Solicitud enviada");
+}
+  
 async function cancelarManana() {
   const confirmar = confirm("¿Cancelar contingencia de mañana?");
   if (!confirmar) return;
@@ -965,6 +988,7 @@ window.resetHoy = resetHoy;
 window.resetManana = resetManana;
 window.limpiarHistorial = limpiarHistorial;
 window.anunciarFase1Manana = anunciarFase1Manana;
+window.notificarContingencia = notificarContingencia;
 window.cancelarManana = cancelarManana;
 window.guardarFase1Config = guardarFase1Config;
 window.setFase1 = setFase1;
