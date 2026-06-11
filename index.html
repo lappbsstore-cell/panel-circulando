@@ -1012,6 +1012,24 @@ async function notificarContingenciaManana() {
 
   alert("🚨 Contingencia MAÑANA enviada");
 }
+
+async function cancelarContingencia() {
+
+  const confirmar =
+    confirm("¿Enviar cancelación de contingencia?");
+
+  if (!confirmar) return;
+
+  const ref =
+    doc(db, "config", "notificaciones");
+
+  await setDoc(ref, {
+    contingencia: Date.now(),
+    tipo: "cancelada"
+  }, { merge: true });
+
+  alert("✅ Cancelación enviada");
+}
   
 async function cancelarManana() {
   const confirmar = confirm("¿Cancelar contingencia de mañana?");
@@ -1045,6 +1063,7 @@ window.anunciarFase1Manana = anunciarFase1Manana;
 window.notificarContingencia = notificarContingencia;
 window.notificarContingenciaHoy = notificarContingenciaHoy;
 window.notificarContingenciaManana = notificarContingenciaManana;
+window.cancelarContingencia = cancelarContingencia;
 window.cancelarManana = cancelarManana;
 window.guardarFase1Config = guardarFase1Config;
 window.setFase1 = setFase1;
