@@ -1020,6 +1020,16 @@ async function cancelarContingencia() {
 
   if (!confirmar) return;
 
+  const refRestricciones =
+    doc(db, "config", "restricciones");
+
+  await setDoc(refRestricciones, {
+    restricciones: {
+      hoy: null,
+      manana: null
+    }
+  }, { merge: true });
+
   const ref =
     doc(db, "config", "notificaciones");
 
@@ -1029,8 +1039,7 @@ async function cancelarContingencia() {
   }, { merge: true });
 
   alert("✅ Cancelación enviada");
-}
-  
+} 
 async function cancelarManana() {
   const confirmar = confirm("¿Cancelar contingencia de mañana?");
   if (!confirmar) return;
