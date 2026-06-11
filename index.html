@@ -351,39 +351,7 @@ button {
 
 <button onclick="resetManana()">🔄 RESET MAÑANA</button>
 
-<h3>Configurar Fase 1</h3>
 
-<button data-fase1="00-pares" onclick="setFase1('00','pares')">H00 PARES</button>
-<button data-fase1="00-nones" onclick="setFase1('00','nones')">H00 NONES</button>
-<button data-fase1="00-todos" onclick="setFase1('00','todos')">H00 TODOS</button>
-
-<button data-fase1-color="00" data-color="amarillo" onclick="setFase1Color(event,'00','amarillo')">🟡 H00 AMARILLO</button>
-<button data-fase1-color="00" data-color="rosa" onclick="setFase1Color(event,'00','rosa')">🌸 H00 ROSA</button>
-<button data-fase1-color="00" data-color="rojo" onclick="setFase1Color(event,'00','rojo')">🔴 H00 ROJO</button>
-<button data-fase1-color="00" data-color="verde" onclick="setFase1Color(event,'00','verde')">🟢 H00 VERDE</button>
-<button data-fase1-color="00" data-color="azul" onclick="setFase1Color(event,'00','azul')">🔵 H00 AZUL</button>
-
-<button data-fase1="0-pares" onclick="setFase1('0','pares')">H0 PARES</button>
-<button data-fase1="0-nones" onclick="setFase1('0','nones')">H0 NONES</button>
-<button data-fase1="0-todos" onclick="setFase1('0','todos')">H0 TODOS</button>
-
-<button data-fase1="1-pares" onclick="setFase1('1','pares')">H1 PARES</button>
-<button data-fase1="1-nones" onclick="setFase1('1','nones')">H1 NONES</button>
-<button data-fase1="1-todos" onclick="setFase1('1','todos')">H1 TODOS</button>
-
-<button data-fase1="2-todos" onclick="setFase1('2','todos')">H2 TODOS</button>
-
-<button data-guardar-fase1 onclick="guardarFase1Config()" style="background:#FF9800;color:white;">
-  💾 Guardar Fase 1
-</button>
-
-<button onclick="resetFase1()" style="background:#f44336;color:white;">
-  🔄 Reset Fase 1
-</button>
-  
-<button data-accion="anunciar" onclick="anunciarFase1Manana()" style="background:#FF9800;color:white;">
-  📢 Anunciar Fase 1 mañana
-</button>
 
 <button
 onclick="notificarContingenciaHoy()"
@@ -397,11 +365,7 @@ style="background:#ff9800;color:white;">
 🚨 Notificar MAÑANA
 </button>
 
-<button
-onclick="notificarContingenciaAmbos()"
-style="background:#9c27b0;color:white;">
-🚨 Notificar HOY y MAÑANA
-</button>
+
 
 <button
 onclick="cancelarContingencia()"
