@@ -36,10 +36,7 @@ button {
 <h3 id="estadoReglas">Sin cambios</h3>
 <div id="resumenHoy" style="font-size:16px; margin-bottom:10px;"></div>
 
-<button class="auto" data-modo="auto" onclick="setModo('auto')">AUTO</button>
-<button class="normal" data-modo="normal" onclick="setModo('normal')">NORMAL</button>
-<button class="fase1" data-modo="fase1" onclick="setModo('fase1')">FASE 1</button>
-<button class="fase2" data-modo="fase2" onclick="setModo('fase2')">FASE 2</button>
+
 
 <h3>Hoy</h3>
 
@@ -373,9 +370,6 @@ style="background:#4caf50;color:white;">
 ✅ Cancelar contingencia
 </button>
 
-<button onclick="cancelarManana()" style="background:#4CAF50;color:white;">
-  ❌ Cancelar contingencia mañana
-</button>
 
 <h3>Historial</h3>
 <button onclick="limpiarHistorial()" style="background:#555;color:white;">
@@ -456,20 +450,7 @@ console.log("CLICK MAÑANA COLOR", holo, color);
   renderBotones();
 }
   
-async function setModo(modo) {
-  await setDoc(doc(db, "config", "restricciones"), {
-    modo: modo,
-    password: passwordIngresada
-  }, { merge: true });
 
-
-  await guardarHistorial({
-  tipo: "modo",
-  valor: modo
-});
-  
-  cargarModo();
-}
 async function guardarHistorial(accion) {
   const ref = doc(db, "config", "restricciones");
   const snap = await getDoc(ref);
@@ -625,7 +606,7 @@ async function cargarModo() {
   if (!snap.exists()) return;
 
   const data = snap.data();
-  document.getElementById("estado").innerText = "Modo actual: " + (data.modo || "auto");
+  document.getElementById("estado").innerText = "🚗 Panel CirculAndo";
 
   renderBotones();
   renderHistorial(); // 🔥 ESTA LÍNEA LA AGREGAS
@@ -649,26 +630,16 @@ function generarResumen(restricciones) {
   }
 
   const hoy = generarTexto(restricciones?.hoy, "Hoy", "#2196F3");
-  let mananaTexto;
-
-if (esFase1Manana(restricciones)) {
-  mananaTexto = `<div style="color:#9C27B0">Mañana: Fase 1 (Panel)</div>`;
-} else {
-  mananaTexto = generarTexto(restricciones?.manana, "Mañana", "#9C27B0");
-}
-
-  return hoy + mananaTexto;
-}
-function esFase1Manana(restricciones) {
-  const manana = restricciones?.manana;
-
-  if (!manana) return false;
-
-  return (
-    manana["0"]?.tipo === "todos" &&
-    manana["1"]?.tipo === "pares"
+  const mananaTexto =
+  generarTexto(
+    restricciones?.manana,
+    "Mañana",
+    "#9C27B0"
   );
+
+return hoy + mananaTexto;
 }
+
   
 async function renderBotones() {
   const snap = await getDoc(doc(db, "config", "restricciones"));
@@ -696,36 +667,12 @@ if (tipo === "color") {
     btn.classList.toggle("activo", activo);
   });
 
-  // 🔥 modo activo
-  const modoActual = data.modo || "auto";
-
-  document.querySelectorAll("button[data-modo]").forEach(btn => {
-    if (btn.dataset.modo === modoActual) {
-      btn.classList.add("activo");
-    } else {
-      btn.classList.remove("activo");
-    }
-  });
-
+  
   // 🔥 resumen (UNA SOLA VEZ)
   const resumen = generarResumen(restricciones);
   document.getElementById("resumenHoy").innerHTML = resumen;
 
-// 🔥 detectar si mañana es fase 1 (PROTEGIDO)
-try {
-  const manana = data.restricciones?.manana || {};
 
-  const esFase1 =
-    manana["0"]?.tipo === "todos" &&
-    manana["1"]?.tipo === "pares";
-
-  document.querySelectorAll("[data-accion='anunciar']").forEach(btn => {
-    btn.classList.toggle("activo", esFase1);
-  });
-
-} catch (e) {
-  console.log("Error en detección de fase1:", e);
-}
   
 }
 
@@ -763,118 +710,14 @@ async function renderHistorial() {
   }).join("");
 }
 
-// 🔥 CONFIGURACIÓN TEMPORAL DE FASE 1
-let fase1Temp = {};
 
-function setFase1Color(event, holo, color) {
 
-  const btn = event.target;
 
-  if (!fase1Temp[holo]) {
-    fase1Temp[holo] = {};
-  }
 
-  if (!fase1Temp[holo].colores) {
-    fase1Temp[holo].colores = [];
-  }
 
-  if (fase1Temp[holo].colores.includes(color)) {
-    fase1Temp[holo].colores =
-      fase1Temp[holo].colores.filter(c => c !== color);
 
-    btn.classList.remove("activo");
-  } else {
-    fase1Temp[holo].colores.push(color);
-
-    btn.classList.add("activo");
-  }
-
-  const btnGuardar = document.querySelector("[data-guardar-fase1]");
-  if (btnGuardar) btnGuardar.classList.add("activo");
-
-  console.log("🔥 FASE1 MULTICOLOR:", fase1Temp);
-}
-
-async function guardarFase1Config() {
-  if (Object.keys(fase1Temp).length === 0) {
-    alert("Configura al menos un holograma");
-    return;
-  }
-
-  const ref = doc(db, "config", "restricciones");
-
-  await setDoc(ref, {
-    fase1Config: fase1Temp
-  }, { merge: true });
-
- const resumen = Object.entries(fase1Temp)
-  .map(([holo, val]) => {
-    if (val.colores) {
-      return `H${holo} colores: ${val.colores.join(", ")}`;
-    }
-    if (val.tipo) {
-      return `H${holo} ${val.tipo}`;
-    }
-    return "";
-  })
-  .join(" | ");
-
-await guardarHistorial({
-  tipo: "config",
-  valor: resumen
-});
-
-  alert("Fase 1 guardada correctamente");
-}
   
-function resetFase1() {
 
-  // 1) limpiar memoria
-  fase1Temp = {};
-
-  // 2) quitar todos los botones activos de fase1
-  document.querySelectorAll("[data-fase1], [data-fase1-color]").forEach(btn => {
-    btn.classList.remove("activo");
-  });
-
-  // 3) quitar activo del botón guardar
-  const btnGuardar = document.querySelector("[data-guardar-fase1]");
-  if (btnGuardar) {
-    btnGuardar.classList.remove("activo");
-  }
-
-  console.log("🧹 FASE1 reiniciada");
-}
-  
-function setFase1(holo, tipo) {
-
-  const botones = document.querySelectorAll(
-    `[data-fase1^="${holo}-"]`
-  );
-
-  const btn = document.querySelector(
-    `[data-fase1="${holo}-${tipo}"]`
-  );
-
-  const yaActivo = btn.classList.contains("activo");
-
-  botones.forEach(b => b.classList.remove("activo"));
-
-  if (!yaActivo) {
-    btn.classList.add("activo");
-
-    if (!fase1Temp[holo]) fase1Temp[holo] = {};
-
-    fase1Temp[holo].tipo = tipo;
-  } else {
-    if (fase1Temp[holo]) delete fase1Temp[holo].tipo;
-  }
-
-  const btnGuardar = document.querySelector("[data-guardar-fase1]");
-  if (btnGuardar) btnGuardar.classList.add("activo");
-
-  console.log("🔥 FASE1 TEMP:", fase1Temp);
-}
 
   async function limpiarHistorial() {
   const confirmar = confirm("¿Seguro que quieres borrar el historial?");
@@ -890,39 +733,7 @@ function setFase1(holo, tipo) {
   renderHistorial();
 }
 
-async function anunciarFase1Manana() {
-  const confirmar = confirm("¿Anunciar Fase 1 para mañana?");
 
-  if (!confirmar) return;
-
-  const ref = doc(db, "config", "restricciones");
-  const snap = await getDoc(ref);
-
-  let data = snap.exists() ? snap.data() : {};
-  let restricciones = data.restricciones || {};
-
-  // 🔥 CONFIGURACIÓN FASE 1 (puedes ajustarla)
-  const manana = data.fase1Config || {};
-
-if (Object.keys(manana).length === 0) {
-  alert("Primero guarda una configuración de Fase 1");
-  return;
-}
-
-  await setDoc(ref, {
-    restricciones: {
-      ...restricciones,
-      manana: manana
-    }
-  }, { merge: true });
-
-  await guardarHistorial({
-    tipo: "mañana",
-    valor: "fase1"
-  });
-
-  renderBotones();
-}
 
 async function notificarContingencia() {
 
@@ -1004,27 +815,9 @@ async function cancelarContingencia() {
 
   alert("✅ Cancelación enviada");
 } 
-async function cancelarManana() {
-  const confirmar = confirm("¿Cancelar contingencia de mañana?");
-  if (!confirmar) return;
 
-  const ref = doc(db, "config", "restricciones");
-
-  await setDoc(ref, {
-    restricciones: {
-      manana: null
-    }
-  }, { merge: true });
-
-  await guardarHistorial({
-    tipo: "mañana",
-    valor: "cancelado"
-  });
-
-  renderBotones();
-}
   
-window.setModo = setModo;
+
 window.setHoyHolo = setHoyHolo;
 window.setHoyColor = setHoyColor;
 window.setMananaHolo = setMananaHolo;
@@ -1032,17 +825,16 @@ window.setMananaColor = setMananaColor; // 👈 ESTA FALTABA
 window.resetHoy = resetHoy;
 window.resetManana = resetManana;
 window.limpiarHistorial = limpiarHistorial;
-window.anunciarFase1Manana = anunciarFase1Manana;
-window.notificarContingencia = notificarContingencia;
+
 window.notificarContingenciaHoy = notificarContingenciaHoy;
 window.notificarContingenciaManana = notificarContingenciaManana;
 window.cancelarContingencia = cancelarContingencia;
-window.cancelarManana = cancelarManana;
-window.guardarFase1Config = guardarFase1Config;
-window.setFase1 = setFase1;
-window.setFase1Color = setFase1Color; // 🔥 ESTA FALTABA
-window.resetFase1 = resetFase1;
-window.guardarFase1Config = guardarFase1Config;
+
+
+
+
+
+
 
 pedirPassword();
 
