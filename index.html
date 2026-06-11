@@ -385,10 +385,28 @@ button {
   📢 Anunciar Fase 1 mañana
 </button>
 
-  <button
-onclick="notificarContingencia()"
+<button
+onclick="notificarContingenciaHoy()"
 style="background:#f44336;color:white;">
-🚨 Notificar contingencia
+🚨 Notificar HOY
+</button>
+
+<button
+onclick="notificarContingenciaManana()"
+style="background:#ff9800;color:white;">
+🚨 Notificar MAÑANA
+</button>
+
+<button
+onclick="notificarContingenciaAmbos()"
+style="background:#9c27b0;color:white;">
+🚨 Notificar HOY y MAÑANA
+</button>
+
+<button
+onclick="cancelarContingencia()"
+style="background:#4caf50;color:white;">
+✅ Cancelar contingencia
 </button>
 
 <button onclick="cancelarManana()" style="background:#4CAF50;color:white;">
@@ -957,6 +975,42 @@ async function notificarContingencia() {
   }, { merge: true });
 
   alert("🚨 Solicitud enviada");
+}
+
+async function notificarContingenciaHoy() {
+
+  const confirmar =
+    confirm("¿Enviar contingencia para HOY?");
+
+  if (!confirmar) return;
+
+  const ref =
+    doc(db, "config", "notificaciones");
+
+  await setDoc(ref, {
+    contingencia: Date.now(),
+    tipo: "hoy"
+  }, { merge: true });
+
+  alert("🚨 Contingencia HOY enviada");
+}
+
+async function notificarContingenciaManana() {
+
+  const confirmar =
+    confirm("¿Enviar contingencia para MAÑANA?");
+
+  if (!confirmar) return;
+
+  const ref =
+    doc(db, "config", "notificaciones");
+
+  await setDoc(ref, {
+    contingencia: Date.now(),
+    tipo: "manana"
+  }, { merge: true });
+
+  alert("🚨 Contingencia MAÑANA enviada");
 }
   
 async function cancelarManana() {
