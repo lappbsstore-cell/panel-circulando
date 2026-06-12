@@ -684,9 +684,8 @@ if (actual.colores.includes(color)) {
   accion
 });
 
-  renderBotones();
+ await renderBotones();
 }
-  
 
 async function guardarHistorial(accion) {
   const ref = doc(db, "config", "restricciones");
@@ -732,7 +731,7 @@ if (hoy[holo] && hoy[holo].tipo === tipo) {
   valor: tipo,
   accion
 });
-  renderBotones();
+  await renderBotones();
 }
 
   async function setHoyColor(event, holo, color) {
