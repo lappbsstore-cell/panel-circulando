@@ -16,6 +16,19 @@ button {
   transition: 0.2s;
 }
 
+.barra-notificaciones {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.barra-notificaciones button {
+  padding: 12px;
+  font-size: 15px;
+  margin-top: 0;
+}
+  
 .auto { background: #4CAF50; color: white; }
 .normal { background: #2196F3; color: white; }
 .fase1 { background: #FF9800; color: white; }
@@ -36,8 +49,30 @@ button {
 <h3 id="estadoReglas">Sin cambios</h3>
 <div id="resumenHoy" style="font-size:16px; margin-bottom:10px;"></div>
 
+<div class="barra-notificaciones">
+  
+<button
+onclick="notificarContingenciaHoy()"
+style="background:#f44336;color:white;">
+🚨 Notificar HOY
+</button>
+
+<button
+onclick="notificarContingenciaManana()"
+style="background:#ff9800;color:white;">
+🚨 Notificar MAÑANA
+</button>
 
 
+
+<button
+onclick="cancelarContingencia()"
+style="background:#4caf50;color:white;">
+✅ Cancelar contingencia
+</button>
+
+</div>
+  
 <h3>Hoy</h3>
 
 <button data-dia="hoy" data-holo="00" data-tipo="pares" onclick="setHoyHolo('00','pares')">H00 PARES</button>
@@ -350,25 +385,6 @@ button {
 
 
 
-<button
-onclick="notificarContingenciaHoy()"
-style="background:#f44336;color:white;">
-🚨 Notificar HOY
-</button>
-
-<button
-onclick="notificarContingenciaManana()"
-style="background:#ff9800;color:white;">
-🚨 Notificar MAÑANA
-</button>
-
-
-
-<button
-onclick="cancelarContingencia()"
-style="background:#4caf50;color:white;">
-✅ Cancelar contingencia
-</button>
 
 
 <h3>Historial</h3>
