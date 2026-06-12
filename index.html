@@ -658,11 +658,15 @@ console.log("CLICK MAÑANA COLOR", holo, color);
 
   if (!actual.colores) actual.colores = [];
 
-  if (actual.colores.includes(color)) {
-    actual.colores = actual.colores.filter(c => c !== color);
-  } else {
-    actual.colores.push(color);
-  }
+  let accion = "";
+
+if (actual.colores.includes(color)) {
+  actual.colores = actual.colores.filter(c => c !== color);
+  accion = "desactivó";
+} else {
+  actual.colores.push(color);
+  accion = "activó";
+}
 
   manana[holo] = actual;
 
@@ -673,10 +677,11 @@ console.log("CLICK MAÑANA COLOR", holo, color);
     }
   }, { merge: true });
 
-  await guardarHistorial({
-  tipo: "mañana",
+ await guardarHistorial({
+  tipo: "hoy",
   holograma: holo,
-  valor: color
+  valor: color,
+  accion
 });
 
   renderBotones();
