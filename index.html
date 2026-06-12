@@ -1015,6 +1015,13 @@ async function notificarContingenciaHoy() {
     tipo: "hoy"
   }, { merge: true });
 
+  await guardarHistorial({
+  tipo: "contingencia",
+  valor: "HOY"
+});
+
+renderHistorial();
+
   alert("🚨 Contingencia HOY enviada");
 }
 
@@ -1032,6 +1039,13 @@ async function notificarContingenciaManana() {
     contingencia: Date.now(),
     tipo: "manana"
   }, { merge: true });
+
+  await guardarHistorial({
+  tipo: "contingencia",
+  valor: "MAÑANA"
+});
+
+renderHistorial();
 
   alert("🚨 Contingencia MAÑANA enviada");
 }
