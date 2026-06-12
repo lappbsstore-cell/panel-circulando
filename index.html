@@ -793,11 +793,15 @@ async function setMananaHolo(holo, tipo) {
   let restricciones = data.restricciones || {};
   let manana = restricciones.manana || {};
 
-  if (manana[holo] && manana[holo].tipo === tipo) {
-    delete manana[holo];
-  } else {
-    manana[holo] = { tipo };
-  }
+  let accion = "";
+
+if (manana[holo] && manana[holo].tipo === tipo) {
+  delete manana[holo];
+  accion = "desactivó";
+} else {
+  manana[holo] = { tipo };
+  accion = "activó";
+}
 
   await setDoc(ref, {
     restricciones: { ...restricciones, manana }
@@ -806,10 +810,9 @@ async function setMananaHolo(holo, tipo) {
   await guardarHistorial({
   tipo: "mañana",
   holograma: holo,
-  valor: tipo
+  valor: tipo,
+  accion
 });
-  renderBotones();
-}
 
 async function resetHoy() {
   await setDoc(doc(db, "config", "restricciones"), {
@@ -939,11 +942,16 @@ async function renderHistorial() {
   div.innerHTML = historial.map(h => {
     const color = colorPorTipo(h.tipo);
 
-    return `
-      <div style="margin-bottom:6px; color:${color}">
-        🕒 ${h.fecha} — ${h.tipo} ${h.holograma || ""} ${h.valor}
-      </div>
-    `;
+    const icono =
+  h.accion === "activó" ? "🟢" :
+  h.accion === "desactivó" ? "🔴" :
+  "🕒";
+
+return `
+  <div style="margin-bottom:6px; color:${color}">
+    ${icono} ${h.fecha} — ${h.tipo} H${h.holograma || ""} ${h.valor} ${h.accion || ""}
+  </div>
+`;
   }).join("");
 }
 
