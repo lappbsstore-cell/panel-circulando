@@ -707,21 +707,26 @@ async function setHoyHolo(holo, tipo) {
   let restricciones = data.restricciones || {};
   let hoy = restricciones.hoy || {};
 
-  if (hoy[holo] && hoy[holo].tipo === tipo) {
-    delete hoy[holo];
-  } else {
-    hoy[holo] = { tipo };
-  }
+  let accion = "";
+
+if (hoy[holo] && hoy[holo].tipo === tipo) {
+  delete hoy[holo];
+  accion = "desactivó";
+} else {
+  hoy[holo] = { tipo };
+  accion = "activó";
+}
 
   await setDoc(ref, {
     restricciones: { ...restricciones, hoy }
   }, { merge: true });
  // 🔥 👇 AQUÍ VA ESTO
   await guardarHistorial({
-    tipo: "hoy",
-    holograma: holo,
-    valor: tipo
-  });
+  tipo: "hoy",
+  holograma: holo,
+  valor: tipo,
+  accion
+});
   renderBotones();
 }
 
