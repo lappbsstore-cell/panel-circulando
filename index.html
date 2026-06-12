@@ -271,56 +271,84 @@ onclick="setHoyColor(event,'0','azul')">
 
 </div>
 
-<button data-dia="hoy" data-holo="1" data-tipo="pares" onclick="setHoyHolo('1','pares')">H1 PARES</button>
-<button data-dia="hoy" data-holo="1" data-tipo="nones" onclick="setHoyHolo('1','nones')">H1 NONES</button>
-<button data-dia="hoy" data-holo="1" data-tipo="todos" onclick="setHoyHolo('1','todos')">H1 TODOS</button>
+<div class="grid3">
 
-
-<button 
-  data-dia="hoy" 
-  data-holo="1" 
-  data-tipo="color"
-  data-color="amarillo"
-  onclick="setHoyColor(event,'1','amarillo')">
-🟡 H1 AMARILLO
+<button
+data-dia="hoy"
+data-holo="1"
+data-tipo="pares"
+onclick="setHoyHolo('1','pares')">
+1 P
 </button>
 
-<button 
-  data-dia="hoy" 
-  data-holo="1" 
-  data-tipo="color"
-  data-color="rosa"
-  onclick="setHoyColor(event,'1','rosa')">
-🌸 H1 ROSA
+<button
+data-dia="hoy"
+data-holo="1"
+data-tipo="nones"
+onclick="setHoyHolo('1','nones')">
+1 N
 </button>
 
-<button 
-  data-dia="hoy" 
-  data-holo="1" 
-  data-tipo="color"
-  data-color="rojo"
-  onclick="setHoyColor(event,'1','rojo')">
-🔴 H1 ROJO
+<button
+data-dia="hoy"
+data-holo="1"
+data-tipo="todos"
+onclick="setHoyHolo('1','todos')">
+1 T
 </button>
 
-<button 
-  data-dia="hoy" 
-  data-holo="1" 
-  data-tipo="color"
-  data-color="verde"
-  onclick="setHoyColor(event,'1','verde')">
-🟢 H1 VERDE
+</div>
+
+  
+
+<div class="grid5">
+
+<button class="amarillo"
+data-dia="hoy"
+data-holo="1"
+data-tipo="color"
+data-color="amarillo"
+onclick="setHoyColor(event,'1','amarillo')">
+1
 </button>
 
-<button 
-  data-dia="hoy" 
-  data-holo="1" 
-  data-tipo="color"
-  data-color="azul"
-  onclick="setHoyColor(event,'1','azul')">
-🔵 H1 AZUL
+<button class="rosa"
+data-dia="hoy"
+data-holo="1"
+data-tipo="color"
+data-color="rosa"
+onclick="setHoyColor(event,'1','rosa')">
+1
 </button>
 
+<button class="rojo"
+data-dia="hoy"
+data-holo="1"
+data-tipo="color"
+data-color="rojo"
+onclick="setHoyColor(event,'1','rojo')">
+1
+</button>
+
+<button class="verde"
+data-dia="hoy"
+data-holo="1"
+data-tipo="color"
+data-color="verde"
+onclick="setHoyColor(event,'1','verde')">
+1
+</button>
+
+<button class="azul"
+data-dia="hoy"
+data-holo="1"
+data-tipo="color"
+data-color="azul"
+onclick="setHoyColor(event,'1','azul')">
+1
+</button>
+
+</div>
 <button data-dia="hoy" data-holo="2" data-tipo="todos" onclick="setHoyHolo('2','todos')">H2 TODOS</button>
 
 <button onclick="resetHoy()">🔄 RESET HOY</button>
