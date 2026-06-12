@@ -1075,6 +1075,12 @@ async function cancelarContingencia() {
     tipo: "cancelada"
   }, { merge: true });
 
+await guardarHistorial({
+  tipo: "cancelada"
+});
+
+renderHistorial();
+  
   alert("✅ Cancelación enviada");
 } 
 
