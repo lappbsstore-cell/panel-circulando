@@ -814,6 +814,9 @@ if (manana[holo] && manana[holo].tipo === tipo) {
   accion
 });
 
+renderBotones();
+}
+
 async function resetHoy() {
   await setDoc(doc(db, "config", "restricciones"), {
     restricciones: { hoy: null }
