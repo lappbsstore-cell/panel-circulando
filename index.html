@@ -950,9 +950,23 @@ async function renderHistorial() {
   h.accion === "desactivó" ? "🔴" :
   "🕒";
 
+let texto = "";
+
+if (h.tipo === "cancelada") {
+  texto = "CONTINGENCIA CANCELADA";
+} else if (h.tipo === "contingencia") {
+  texto = `CONTINGENCIA ${h.valor}`;
+} else if (h.tipo === "reset") {
+  texto = `RESET ${h.valor.toUpperCase()}`;
+} else {
+  texto =
+    `${h.tipo.toUpperCase()} H${h.holograma || ""} ` +
+    `${h.valor || ""} ${h.accion || ""}`;
+}
+
 return `
   <div style="margin-bottom:6px; color:${color}">
-    ${icono} ${h.fecha} — ${h.tipo} H${h.holograma || ""} ${h.valor} ${h.accion || ""}
+    ${icono} ${h.fecha} — ${texto}
   </div>
 `;
   }).join("");
