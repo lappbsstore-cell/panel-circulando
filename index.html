@@ -946,6 +946,9 @@ async function renderHistorial() {
     const color = colorPorTipo(h.tipo);
 
     const icono =
+  h.tipo === "cancelada" ? "✅" :
+  h.tipo === "contingencia" ? "🚨" :
+  h.tipo === "reset" ? "🧹" :
   h.accion === "activó" ? "🟢" :
   h.accion === "desactivó" ? "🔴" :
   "🕒";
