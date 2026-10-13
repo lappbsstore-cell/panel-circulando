@@ -100,24 +100,28 @@ button {
 
 <div class="barra-notificaciones">
   
+
 <button
-onclick="notificarContingenciaHoy()"
-style="background:#f44336;color:white;">
-🚨 Notificar HOY
+  id="btnContingenciaHoy"
+  onclick="notificarContingenciaHoy()"
+  style="background:#f44336;color:white;transition:all 0.15s ease;">
+  🚨 Notificar HOY
 </button>
 
 <button
-onclick="notificarContingenciaManana()"
-style="background:#ff9800;color:white;">
-🚨 Notificar MAÑANA
+  id="btnContingenciaManana"
+  onclick="notificarContingenciaManana()"
+  style="background:#ff9800;color:white;transition:all 0.15s ease;">
+  🚨 Notificar MAÑANA
 </button>
 
 
 
 <button
-onclick="cancelarContingencia()"
-style="background:#4caf50;color:white;">
-✅ Cancelar contingencia
+  id="btnCancelarContingencia"
+  onclick="cancelarContingencia()"
+  style="background:#4caf50;color:white;transition:all 0.15s ease;">
+  ✅ Cancelar contingencia
 </button>
 
 </div>
@@ -1017,91 +1021,123 @@ async function notificarContingencia() {
   alert("🚨 Solicitud enviada");
 }
 
+
+async function ejecutarConEstadoBoton(id, textoProcesando, accion) {
+  const boton = document.getElementById(id);
+
+  if (!boton || boton.disabled) return;
+
+  const textoOriginal = boton.innerHTML;
+  const colorOriginal = boton.style.background;
+
+  boton.disabled = true;
+  boton.style.opacity = "0.75";
+  boton.style.cursor = "wait";
+  boton.style.background = "#555";
+  boton.innerHTML = "⏳ " + textoProcesando;
+
+  try {
+    await accion();
+  } catch (error) {
+    console.error("Error al ejecutar la acción:", error);
+    alert("❌ Ocurrió un error. Revisa la conexión e inténtalo de nuevo.");
+  } finally {
+    boton.disabled = false;
+    boton.style.opacity = "1";
+    boton.style.cursor = "pointer";
+    boton.style.background = colorOriginal;
+    boton.innerHTML = textoOriginal;
+  }
+}
+
+  
+
 async function notificarContingenciaHoy() {
+  await ejecutarConEstadoBoton(
+    "btnContingenciaHoy",
+    "Enviando aviso de HOY…",
+    async () => {
+      const confirmar = confirm("¿Enviar contingencia para HOY?");
+      if (!confirmar) return;
 
-  const confirmar =
-    confirm("¿Enviar contingencia para HOY?");
+      const ref = doc(db, "config", "notificaciones");
 
-  if (!confirmar) return;
+      await setDoc(ref, {
+        contingencia: Date.now(),
+        tipo: "hoy"
+      }, { merge: true });
 
-  const ref =
-    doc(db, "config", "notificaciones");
+      await guardarHistorial({
+        tipo: "contingencia",
+        valor: "HOY"
+      });
 
-  await setDoc(ref, {
-    contingencia: Date.now(),
-    tipo: "hoy"
-  }, { merge: true });
-
-  await guardarHistorial({
-  tipo: "contingencia",
-  valor: "HOY"
-});
-
-renderHistorial();
-
-  alert("🚨 Contingencia HOY enviada");
+      renderHistorial();
+      alert("🚨 Aviso de contingencia para HOY enviado");
+    }
+  );
 }
 
 async function notificarContingenciaManana() {
+  await ejecutarConEstadoBoton(
+    "btnContingenciaManana",
+    "Enviando aviso de MAÑANA…",
+    async () => {
+      const confirmar = confirm("¿Enviar contingencia para MAÑANA?");
+      if (!confirmar) return;
 
-  const confirmar =
-    confirm("¿Enviar contingencia para MAÑANA?");
+      const ref = doc(db, "config", "notificaciones");
 
-  if (!confirmar) return;
+      await setDoc(ref, {
+        contingencia: Date.now(),
+        tipo: "manana"
+      }, { merge: true });
 
-  const ref =
-    doc(db, "config", "notificaciones");
+      await guardarHistorial({
+        tipo: "contingencia",
+        valor: "MAÑANA"
+      });
 
-  await setDoc(ref, {
-    contingencia: Date.now(),
-    tipo: "manana"
-  }, { merge: true });
-
-  await guardarHistorial({
-  tipo: "contingencia",
-  valor: "MAÑANA"
-});
-
-renderHistorial();
-
-  alert("🚨 Contingencia MAÑANA enviada");
+      renderHistorial();
+      alert("🚨 Aviso de contingencia para MAÑANA enviado");
+    }
+  );
 }
 
 async function cancelarContingencia() {
+  await ejecutarConEstadoBoton(
+    "btnCancelarContingencia",
+    "Cancelando contingencia…",
+    async () => {
+      const confirmar = confirm("¿Enviar cancelación de contingencia?");
+      if (!confirmar) return;
 
-  const confirmar =
-    confirm("¿Enviar cancelación de contingencia?");
+      const refRestricciones = doc(db, "config", "restricciones");
 
-  if (!confirmar) return;
+      await setDoc(refRestricciones, {
+        restricciones: {
+          hoy: null,
+          manana: null
+        }
+      }, { merge: true });
 
-  const refRestricciones =
-    doc(db, "config", "restricciones");
+      const ref = doc(db, "config", "notificaciones");
 
-  await setDoc(refRestricciones, {
-    restricciones: {
-      hoy: null,
-      manana: null
+      await setDoc(ref, {
+        contingencia: Date.now(),
+        tipo: "cancelada"
+      }, { merge: true });
+
+      await guardarHistorial({
+        tipo: "cancelada"
+      });
+
+      renderHistorial();
+      alert("✅ Contingencia cancelada");
     }
-  }, { merge: true });
+  );
+}
 
-  const ref =
-    doc(db, "config", "notificaciones");
-
-  await setDoc(ref, {
-    contingencia: Date.now(),
-    tipo: "cancelada"
-  }, { merge: true });
-
-await guardarHistorial({
-  tipo: "cancelada"
-});
-
-renderHistorial();
-  
-  alert("✅ Cancelación enviada");
-} 
-
-  
 
 window.setHoyHolo = setHoyHolo;
 window.setHoyColor = setHoyColor;
