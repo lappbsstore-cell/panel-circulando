@@ -42,6 +42,16 @@ button {
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
+#btnContingenciaHoy.seleccionado,
+#btnContingenciaManana.seleccionado,
+#btnCancelarContingencia.seleccionado {
+  transform: scale(0.95);
+  border: 4px solid white !important;
+  outline: 2px solid black;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
 
 #btnContingenciaHoy:active,
 #btnContingenciaManana:active,
@@ -1064,6 +1074,24 @@ async function ejecutarConEstadoBoton(id, textoProcesando, accion) {
 
   
 
+
+function marcarBotonContingencia(idSeleccionado) {
+  const ids = [
+    "btnContingenciaHoy",
+    "btnContingenciaManana",
+    "btnCancelarContingencia"
+  ];
+
+  ids.forEach((id) => {
+    const boton = document.getElementById(id);
+    if (boton) {
+      boton.classList.toggle("seleccionado", id === idSeleccionado);
+    }
+  });
+}
+
+
+  
 async function notificarContingenciaHoy() {
   await ejecutarConEstadoBoton(
     "btnContingenciaHoy",
@@ -1079,6 +1107,8 @@ async function notificarContingenciaHoy() {
         tipo: "hoy"
       }, { merge: true });
 
+      marcarBotonContingencia("btnContingenciaHoy");
+      
       await guardarHistorial({
         tipo: "contingencia",
         valor: "HOY"
@@ -1104,6 +1134,8 @@ async function notificarContingenciaManana() {
         contingencia: Date.now(),
         tipo: "manana"
       }, { merge: true });
+      
+      marcarBotonContingencia("btnContingenciaManana");
 
       await guardarHistorial({
         tipo: "contingencia",
@@ -1139,6 +1171,8 @@ async function cancelarContingencia() {
         contingencia: Date.now(),
         tipo: "cancelada"
       }, { merge: true });
+
+      marcarBotonContingencia("btnCancelarContingencia");
 
       await guardarHistorial({
         tipo: "cancelada"
