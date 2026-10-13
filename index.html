@@ -1076,19 +1076,26 @@ async function ejecutarConEstadoBoton(id, textoProcesando, accion) {
 
 
 
+
 function marcarBotonContingencia(idSeleccionado) {
-  const boton = document.getElementById(idSeleccionado);
+  const botonHoy = document.getElementById("btnContingenciaHoy");
+  const botonManana = document.getElementById("btnContingenciaManana");
+  const botonCancelar = document.getElementById("btnCancelarContingencia");
 
-  if (idSeleccionado === "btnCancelarContingencia") {
-    const hoy = document.getElementById("btnContingenciaHoy");
-    const manana = document.getElementById("btnContingenciaManana");
-
-    if (hoy) hoy.classList.remove("seleccionado");
-    if (manana) manana.classList.remove("seleccionado");
+  if (idSeleccionado === "btnContingenciaHoy") {
+    if (botonHoy) botonHoy.classList.add("seleccionado");
+    if (botonCancelar) botonCancelar.classList.remove("seleccionado");
   }
 
-  if (boton) {
-    boton.classList.toggle("seleccionado", true);
+  if (idSeleccionado === "btnContingenciaManana") {
+    if (botonManana) botonManana.classList.add("seleccionado");
+    if (botonCancelar) botonCancelar.classList.remove("seleccionado");
+  }
+
+  if (idSeleccionado === "btnCancelarContingencia") {
+    if (botonHoy) botonHoy.classList.remove("seleccionado");
+    if (botonManana) botonManana.classList.remove("seleccionado");
+    if (botonCancelar) botonCancelar.classList.add("seleccionado");
   }
 }
 
