@@ -1077,6 +1077,7 @@ async function ejecutarConEstadoBoton(id, textoProcesando, accion) {
 
 
 
+
 function marcarBotonContingencia(idSeleccionado) {
   const botonHoy = document.getElementById("btnContingenciaHoy");
   const botonManana = document.getElementById("btnContingenciaManana");
@@ -1095,9 +1096,10 @@ function marcarBotonContingencia(idSeleccionado) {
   if (idSeleccionado === "btnCancelarContingencia") {
     if (botonHoy) botonHoy.classList.remove("seleccionado");
     if (botonManana) botonManana.classList.remove("seleccionado");
-    if (botonCancelar) botonCancelar.classList.add("seleccionado");
+    if (botonCancelar) botonCancelar.classList.remove("seleccionado");
   }
 }
+
 
 
 
