@@ -1186,10 +1186,13 @@ async function notificarContingenciaManana() {
 
       const ref = doc(db, "config", "notificaciones");
 
-      await setDoc(ref, {
-        contingencia: Date.now(),
-        tipo: "manana"
-      }, { merge: true });
+     
+await setDoc(ref, {
+  contingencia: Date.now(),
+  tipo: "manana",
+  mananaActivo: true
+}, { merge: true });
+
       
       marcarBotonContingencia("btnContingenciaManana");
 
