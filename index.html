@@ -1128,10 +1128,13 @@ async function notificarContingenciaHoy() {
 
       const ref = doc(db, "config", "notificaciones");
 
-      await setDoc(ref, {
-        contingencia: Date.now(),
-        tipo: "hoy"
-      }, { merge: true });
+     
+await setDoc(ref, {
+  contingencia: Date.now(),
+  tipo: "hoy",
+  hoyActivo: true
+}, { merge: true });
+
 
       marcarBotonContingencia("btnContingenciaHoy");
       
