@@ -883,6 +883,33 @@ await guardarHistorial({
   await renderBotones();
 }
 
+
+async function restaurarBotonesContingencia() {
+  const snap = await getDoc(doc(db, "config", "notificaciones"));
+
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+
+  const botonHoy = document.getElementById("btnContingenciaHoy");
+  const botonManana = document.getElementById("btnContingenciaManana");
+  const botonCancelar = document.getElementById("btnCancelarContingencia");
+
+  if (botonHoy) {
+    botonHoy.classList.toggle("seleccionado", data.hoyActivo === true);
+  }
+
+  if (botonManana) {
+    botonManana.classList.toggle("seleccionado", data.mananaActivo === true);
+  }
+
+  if (botonCancelar) {
+    botonCancelar.classList.remove("seleccionado");
+  }
+}
+
+
+  
 async function cargarModo() {
   const snap = await getDoc(doc(db, "config", "restricciones"));
 
@@ -1232,12 +1259,15 @@ window.cancelarContingencia = cancelarContingencia;
 
 
 
+
 pedirPassword();
 
 setTimeout(() => {
   renderBotones();
   renderHistorial();
+  restaurarBotonesContingencia();
 }, 1000);
+
 
 setInterval(cargarModo, 3000);
 </script>
