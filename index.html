@@ -1226,10 +1226,12 @@ async function cancelarContingencia() {
 
       const ref = doc(db, "config", "notificaciones");
 
-      await setDoc(ref, {
-        contingencia: Date.now(),
-        tipo: "cancelada"
-      }, { merge: true });
+    await setDoc(ref, {
+  contingencia: Date.now(),
+  tipo: "cancelada",
+  hoyActivo: false,
+  mananaActivo: false
+}, { merge: true });
 
       marcarBotonContingencia("btnCancelarContingencia");
 
