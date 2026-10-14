@@ -884,6 +884,7 @@ await guardarHistorial({
 }
 
 
+
 async function restaurarBotonesContingencia() {
   const snap = await getDoc(doc(db, "config", "notificaciones"));
 
@@ -895,12 +896,44 @@ async function restaurarBotonesContingencia() {
   const botonManana = document.getElementById("btnContingenciaManana");
   const botonCancelar = document.getElementById("btnCancelarContingencia");
 
+  const ahora = new Date();
+  const fechaActual =
+    `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, "0")}-${String(ahora.getDate()).padStart(2, "0")}`;
+
+  let actualizarFirebase = false;
+  const cambios = {};
+
+  // HOY: desmarcar cuando la fecha del aviso ya pasó.
+  const fechaHoyVencida =
+    data.fechaAvisoHoy && data.fechaAvisoHoy < fechaActual;
+
+  if (fechaHoyVencida && data.hoyActivo === true) {
+    cambios.hoyActivo = false;
+    actualizarFirebase = true;
+  }
+
+  // MAÑANA: desmarcar cuando el día para el que se avisó ya pasó.
+  const fechaMananaVencida =
+    data.fechaAvisoManana && data.fechaAvisoManana < fechaActual;
+
+  if (fechaMananaVencida && data.mananaActivo === true) {
+    cambios.mananaActivo = false;
+    actualizarFirebase = true;
+  }
+
+  if (actualizarFirebase) {
+    await setDoc(doc(db, "config", "notificaciones"), cambios, { merge: true });
+  }
+
+  const hoyActivo = data.hoyActivo === true && !fechaHoyVencida;
+  const mananaActivo = data.mananaActivo === true && !fechaMananaVencida;
+
   if (botonHoy) {
-    botonHoy.classList.toggle("seleccionado", data.hoyActivo === true);
+    botonHoy.classList.toggle("seleccionado", hoyActivo);
   }
 
   if (botonManana) {
-    botonManana.classList.toggle("seleccionado", data.mananaActivo === true);
+    botonManana.classList.toggle("seleccionado", mananaActivo);
   }
 
   if (botonCancelar) {
@@ -1156,10 +1189,14 @@ async function notificarContingenciaHoy() {
       const ref = doc(db, "config", "notificaciones");
 
      
+const ahora = new Date();
+const fechaHoy = `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, "0")}-${String(ahora.getDate()).padStart(2, "0")}`;
+
 await setDoc(ref, {
   contingencia: Date.now(),
   tipo: "hoy",
-  hoyActivo: true
+  hoyActivo: true,
+  fechaAvisoHoy: fechaHoy
 }, { merge: true });
 
 
@@ -1186,11 +1223,18 @@ async function notificarContingenciaManana() {
 
       const ref = doc(db, "config", "notificaciones");
 
-     
+const ahora = new Date();
+const fechaManana = new Date(ahora);
+fechaManana.setDate(fechaManana.getDate() + 1);
+
+const fechaAvisoManana =
+  `${fechaManana.getFullYear()}-${String(fechaManana.getMonth() + 1).padStart(2, "0")}-${String(fechaManana.getDate()).padStart(2, "0")}`;
+
 await setDoc(ref, {
   contingencia: Date.now(),
   tipo: "manana",
-  mananaActivo: true
+  mananaActivo: true,
+  fechaAvisoManana: fechaAvisoManana
 }, { merge: true });
 
       
